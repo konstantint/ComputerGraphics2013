@@ -14,17 +14,29 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="/opt/local/include" />
 				</Compiler>
+				<Linker>
+					<Add library="allegro" />
+					<Add library="allegro_font" />
+					<Add library="allegro_main" />
+					<Add library="allegro_primitives" />
+					<Add library="allegro_audio" />
+					<Add library="allegro_color" />
+					<Add library="allegro_dialog" />
+					<Add library="allegro_image" />
+					<Add directory="/opt/local/lib" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add directory="include/allegro" />
+			<Add directory="/opt/local/include" />
 		</Compiler>
 		<Linker>
-			<Add library="allegro-5.0.10-monolith-md" />
-			<Add directory="lib/mingw" />
+			<Add library="allegro" />
+			<Add directory="/opt/local/lib" />
 		</Linker>
 		<Unit filename="src/helloallegro.cpp" />
 		<Extensions>
