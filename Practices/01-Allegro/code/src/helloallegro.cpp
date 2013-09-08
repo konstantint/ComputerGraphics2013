@@ -210,8 +210,8 @@ void draw_primitives() {
     al_draw_filled_ellipse(600, 250, 50, 100, al_color_html("#ff0000"));
 
     // Text
-    al_draw_text(my_font, al_color_hsv(60, 255, 150), 70, 12, ALLEGRO_ALIGN_LEFT, "Screen 1: draw_primitives().");
-    al_draw_text(my_font, al_color_hsv(60, 255, 150), 70, 65, ALLEGRO_ALIGN_LEFT, "Press space.");
+    al_draw_text(my_font, al_color_hsv(0.1, 1.0, 1.0), 70, 12, ALLEGRO_ALIGN_LEFT, "Screen 1: draw_primitives().");
+    al_draw_text(my_font, al_color_hsv(0.1, 1.0, 1.0), 70, 65, ALLEGRO_ALIGN_LEFT, "Press space.");
 }
 
 void draw_bitmaps() {
