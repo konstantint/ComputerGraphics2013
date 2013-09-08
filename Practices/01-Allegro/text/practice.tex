@@ -50,9 +50,9 @@ Exercise session I: Programming a 2D graphics system.}
 \date{September 09, 2013}
 \maketitle
 
-The aim of this exercise session is to get a first feel for how graphical applications are made. The first part of the session is devoted to a brief overview of the C language, which might be helpful to those who have not used (or have forgotten how to use) it before. If you feel comfortable with C you may safely skip it. In the second part we shall do some of the actual Allegro programming (and that is the part that gives you credit points).
+The aim of this exercise session is to get a first feel for how graphical applications are made. The first part of the session is devoted to a brief overview of the C language, which might be helpful to those who have not used (or have forgotten how to use) it before. If you feel comfortable with C you may safely skip it. In the second part we shall do some of the actual graphics programming (and that is the part that gives you credit points).
 
-The code base for the exercise session is provided in the file \texttt{practice01.zip}, available on the course website\footnote{Alternatively, all lecture slides and practice session materials are also available at Github: \url{http://github.org/konstantint/ComputerGraphics2013}}. You should download and unpack this archive to some writable directory (e.g. the desktop) before proceeding. All the solutions should be implemented in code within the file \texttt{helloallegro.cpp}, located in the \texttt{src} directory. The homework is submitted by uploading the zip archive of the project directory via the homework submission interface accessible at \url{https://courses.cs.ut.ee/2013/cg/fall/Main/Practices}.
+The code base for the exercise session is provided in the file \texttt{practice01.zip}, available on the course website\footnote{Alternatively, all lecture slides and practice session materials are also available on Github: \url{http://github.org/konstantint/ComputerGraphics2013}}. You should download and unpack this archive to some writable directory (e.g. the desktop) before proceeding. All the solutions should be implemented in code within the file \texttt{helloallegro.cpp}, located in the \texttt{src} directory. The homework is submitted by uploading the zipped project directory via the homework submission interface accessible at \url{https://courses.cs.ut.ee/2013/cg/fall/Main/Practices}.
 
 Make sure that your code compiles and runs fine. Submissions that do not compile may get zero points.
 
@@ -74,16 +74,16 @@ One or more \emph{.o} files are then \emph{linked} together into the final execu
 
 \paragraph{Build options.} You must have noted that the compiler and linker invocations have some additional options. Indeed, there are many possibilities to fine-tune the way compilation and linking is performed using \emph{Build options}. You should not care much about them so far, but in case you are interested, try looking at the \emph{Project/Build options} and \emph{Project/Properties} menus. Those are the two dialogs where everything about the project is specified.
 
-\paragraph{The C language.} Study the code in \texttt{helloworld.cpp}. This should give you an idea about the things you will need to know about C. Try playing with the code, changing things and looking at the result. If you feel completely new to the language, check out the ``How C programming works'' tutorial, referenced from the practice session page on the course site. Also, the ``C reference card'' can provide a two-page overview of more C than you'll ever need in this course.
+\paragraph{The C language.} Study the code in \texttt{helloworld.cpp}. This should give you an idea of the core things you need to know about C. Try playing with the code, changing some lines and looking at the result. If you feel completely new to the language, check out the ``How C programming works'' tutorial, referenced from the practice session page on the course site. Also, the ``C reference card'' can provide a two-page overview of more C than you'll ever need in this course.
 \newpage
 \section{Allegro. Programming a 2D Graphics System}
 
-Allegro is a popular cross-platform library for (mainly) 2D graphics and game programming\footnote{The latest version, Allegro 5, actually provides proper access to hardware-accelerated OpenGL for 3D graphics.}. This is in no way the only such library out there, nor is it the best for all purposes\footnote{SDL, Cocos2D-x and SFML are among the closest alternatives, and there are literally hundreds of more distant relatives in C and other languages.}, but it is good enough to understand the general principles.
+Allegro is a popular cross-platform library for (mainly) 2D graphics and game programming\footnote{The latest version, Allegro 5, actually provides proper access to hardware-accelerated OpenGL for 3D graphics.}. This is in no way the only such library out there, nor is it the best for all purposes\footnote{SDL, Cocos2D-x and SFML are among the closest alternatives. There are literally hundreds of more distant relatives in C and other languages.}, but it is good enough to understand the general principles.
 
 Start by opening the file \verb#1_HelloAllegro.cbp# in CodeBlocks, building and running the project.
 
 \begin{exercise}{1}{1}
-Study the code and introduce a couple some simple changes:
+Study the code and introduce some simple changes:
 \begin{enumerate}
 \item On the first scene add a square of your favourite color with an inscribed filled circle.
 \item On the second scene draw a rotated version of the cat using
@@ -95,7 +95,7 @@ al_draw_rotated_bitmap()
 \end{exercise}
 
 \begin{exercise}{2}{1}
-Add another scene to the program, that draws an image using the following algorithm (in pseudocode):
+Add another scene to the program, that draws an image according to the following algorithm (in pseudocode):
 \begin{lstlisting}
 	points   = { (0, 0), (320, 640), (400, 0) }
 	curpoint = points[0]
@@ -115,10 +115,10 @@ Add another scene to the program, that draws an image using the following algori
 Modify the third scene into a basic ``platformer'' game, namely:
 \begin{enumerate}
 \item Add a background picture. Make one of your own or find from the internet.
-\item The main character (can be a person, a kitten, etc, whatever comes to your mind) should be able to move left, right \emph{and jump} (using the arrow keys).
+\item The main character (can be a person, a kitten, etc, whatever comes to your mind) should be able to move left, right and jump (using the arrow keys).
 \item The character cannot leave the bounds of the screen or fall below the ground.
 \end{enumerate}
-The most simplistic implementation of this specification gives one point. Any displays of creativity (e.g. animated character, scrolling background, obstacles or platforms, sound effects, etc) are awarded by another point.
+The most simplistic implementation of this specification gives one point. Any displays of creativity (e.g. animated character, scrolling background, obstacles or platforms, sound effects, etc) are awarded with another point.
 
 \end{exercise}
 
