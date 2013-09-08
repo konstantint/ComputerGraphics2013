@@ -1,10 +1,16 @@
 /* alplatf.h is generated from alplatf.h.cmake */
-#define ALLEGRO_MINGW32
+#ifdef __MINGW32__
+    #define ALLEGRO_MINGW32
+    #define ALLEGRO_CFG_D3D
+#elif __linux__
+    #define ALLEGRO_UNIX
+    #define ALLEGRO_LINUX
+#endif
+
+#define ALLEGRO_CFG_OPENGL
 /* #undef ALLEGRO_UNIX */
 /* #undef ALLEGRO_MSVC */
-#define ALLEGRO_CFG_D3D
 /* #undef ALLEGRO_CFG_D3D9EX */
-#define ALLEGRO_CFG_OPENGL
 /* #undef ALLEGRO_MACOSX */
 /* #undef ALLEGRO_BCC32 */
 /* #undef ALLEGRO_GP2XWIZ */
@@ -37,7 +43,7 @@
 #define RETSIGTYPE void
 
 /* This is defined on the command-line in the autotools build. */
-#define ALLEGRO_MODULES_PATH 
+#define ALLEGRO_MODULES_PATH
 
 /*---------------------------------------------------------------------------*/
 
