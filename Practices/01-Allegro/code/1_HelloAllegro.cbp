@@ -2,17 +2,17 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="HelloWorld" />
+		<Option title="HelloAllegro" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option output="bin/0_CPrimer" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/0_HelloAllegro" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/" />
 				<Option object_output="obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -20,8 +20,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="include/allegro" />
 		</Compiler>
-		<Unit filename="src/helloworld.cpp" />
+		<Linker>
+			<Add library="allegro-5.0.10-monolith-md" />
+			<Add directory="lib/mingw" />
+		</Linker>
+		<Unit filename="src/helloallegro.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
