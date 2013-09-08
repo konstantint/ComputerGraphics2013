@@ -1,0 +1,125 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, mdwlist, graphicx, hyperref}
+\usepackage{listings,color}
+\usepackage[usenames,dvipsnames]{xcolor}
+\definecolor{gray}{rgb}{0.95,0.95,0.95}
+\lstset{%
+language=C,%
+backgroundcolor=\color{gray},
+basicstyle=\ttfamily,
+keywordstyle=\color{Blue},
+commentstyle=\color{OliveGreen},
+stringstyle=\color{MidnightBlue},
+columns=flexible,
+showstringspaces=false
+}
+
+\newcommand{\mpar}[1]{\marginpar{\textit{#1}}}
+\newcommand{\norm}[1]{\Vert #1 \Vert}
+\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\argmin}{argmin}
+\newenvironment{solution}{\paragraph{Solution.}$\,$ }{\vskip 3mm\hrule}
+\newenvironment{exercise}[2]{\paragraph{Exercise #1 (#2pt).} }{}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bd}{\mathbf{d}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bzero}{\mathbf{0}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bSigma}{\mathbf{\Sigma}}
+\newcommand{\bp}{\mathbf{p}}
+\newcommand{\bm}{\mathbf{m}}
+\newcommand{\bM}{\mathbf{M}}
+\newcommand{\bK}{\mathbf{K}}
+\newcommand{\bD}{\mathbf{D}}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bR}{\mathbf{R}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bS}{\mathbf{S}}
+\newcommand{\bT}{\mathbf{T}}
+\newcommand{\balpha}{\boldsymbol{\alpha}}
+
+\begin{document}
+\title{MTAT.03.015 Computer Graphics (Fall 2013)\\
+Exercise session I: Programming a 2D graphics system.}
+\author{Konstantin Tretyakov, Ilya Kuzovkin}
+\date{September 09, 2013}
+\maketitle
+
+The aim of this exercise session is to get a first feel for how graphical applications are made. The first part of the session is devoted to a brief overview of the C language, which might be helpful to those who have not used (or have forgotten how to use) it before. If you feel comfortable with C you may safely skip it. In the second part we shall do some of the actual Allegro programming (and that is the part that gives you credit points).
+
+The code base for the exercise session is provided in the file \texttt{practice01.zip}, available on the course website\footnote{Alternatively, all lecture slides and practice session materials are also available at Github: \url{http://github.org/konstantint/ComputerGraphics2013}}. You should download and unpack this archive to some writable directory (e.g. the desktop) before proceeding. All the solutions should be implemented in code within the file \texttt{helloallegro.cpp}, located in the \texttt{src} directory. The homework is submitted by uploading the zip archive of the project directory via the homework submission interface accessible at \url{https://courses.cs.ut.ee/2013/cg/fall/Main/Practices}.
+
+Make sure that your code compiles and runs fine. Submissions that do not compile may get zero points.
+
+
+\section{C Programming Primer}
+
+We shall be programming in C during this course\footnote{... with a tiny sprinkle of C++ in a couple of places where it makes things easier.}. Note that there is nothing special about C as far as graphics programming goes. Indeed, most mainstream graphics libraries have bindings for many languages, so you could, for example, use the Allegro library in a Python, Lisp or C\# project. The correspondence is straightforward: whenever you use the function \verb#al_init# in C you would have to use \verb#allegro.al_init# in Python or \verb#(al_init)# in LISP, etc. None the less, C, being a low-level compiled language, often offers performance benefits which are important for visually rich applications, hence it is still among the main tools of computer graphics practitioners. You simply would not be able to claim that you know computer graphics if you haven't had experience with it in C.
+
+\paragraph{Compilation and linking.} C is a \emph{compiled} language. You write the C program in one or more text files with the extension \emph{.c} or \emph{.cpp}. This text can then be translated into binary code (a file with extension \emph{.o}) using a compiler. Typically compilation is performed by invoking something like
+\begin{lstlisting}{bash}
+	$ gcc -c program.cpp -o program.o
+\end{lstlisting}
+One or more \emph{.o} files are then \emph{linked} together into the final executable (adding all the necessary external libraries along the way) using the \emph{linker}. The linker is typically invoked as follows (note the missing \texttt{-c} option):
+\begin{lstlisting}{bash}
+	$ gcc program.o -l somelibrary -o final_executable
+\end{lstlisting}
+
+\paragraph{IDE.} The task of having to invoke the compilation routine is simplified by using a smart editor (an \emph{Integrated Development Environment, IDE}). We shall be using the CodeBlocks IDE. To get a feeling of it, please, download and unpack the practice codebase, then open the file \verb#0_HelloWorld.cbp# in CodeBlocks. Note by browsing the \emph{Project tree} on the left pane, that the project contains a single file, \texttt{helloworld.cpp}. Build the project by pressing the \emph{Build} button on the toolbar. Observe the output in the \emph{Build log} on the lower pane -- you should see how the compiler and linker are invoked. Then press the \emph{Run} button to launch the resulting executable.
+
+\paragraph{Build options.} You must have noted that the compiler and linker invocations have some additional options. Indeed, there are many possibilities to fine-tune the way compilation and linking is performed using \emph{Build options}. You should not care much about them so far, but in case you are interested, try looking at the \emph{Project/Build options} and \emph{Project/Properties} menus. Those are the two dialogs where everything about the project is specified.
+
+\paragraph{The C language.} Study the code in \texttt{helloworld.cpp}. This should give you an idea about the things you will need to know about C. Try playing with the code, changing things and looking at the result. If you feel completely new to the language, check out the ``How C programming works'' tutorial, referenced from the practice session page on the course site. Also, the ``C reference card'' can provide a two-page overview of more C than you'll ever need in this course.
+\newpage
+\section{Allegro. Programming a 2D Graphics System}
+
+Allegro is a popular cross-platform library for (mainly) 2D graphics and game programming\footnote{The latest version, Allegro 5, actually provides proper access to hardware-accelerated OpenGL for 3D graphics.}. This is in no way the only such library out there, nor is it the best for all purposes\footnote{SDL, Cocos2D-x and SFML are among the closest alternatives, and there are literally hundreds of more distant relatives in C and other languages.}, but it is good enough to understand the general principles.
+
+Start by opening the file \verb#1_HelloAllegro.cbp# in CodeBlocks, building and running the project.
+
+\begin{exercise}{1}{1}
+Study the code and introduce a couple some simple changes:
+\begin{enumerate}
+\item On the first scene add a square of your favourite color with an inscribed filled circle.
+\item On the second scene draw a rotated version of the cat using
+\begin{lstlisting}
+al_draw_rotated_bitmap()
+\end{lstlisting}
+\item On the third scene, change the code so that the kitten could not leave the screen.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{2}{1}
+Add another scene to the program, that draws an image using the following algorithm (in pseudocode):
+\begin{lstlisting}
+	points   = { (0, 0), (320, 640), (400, 0) }
+	curpoint = points[0]
+	for i = 1..4000:
+		put_pixel(curpoint, RED)
+		r = random integer from {0, 1, 2}
+		curpoint = (points[r] + curpoint)/2
+	end
+\end{lstlisting}
+\end{exercise}
+\paragraph{Hint.} You can generate random numbers using
+\begin{lstlisting}
+	int r = rand() % 3;
+\end{lstlisting}
+
+\begin{exercise}{3}{1-2}
+Modify the third scene into a basic ``platformer'' game, namely:
+\begin{enumerate}
+\item Add a background picture. Make one of your own or find from the internet.
+\item The main character (can be a person, a kitten, etc, whatever comes to your mind) should be able to move left, right \emph{and jump} (using the arrow keys).
+\item The character cannot leave the bounds of the screen or fall below the ground.
+\end{enumerate}
+The most simplistic implementation of this specification gives one point. Any displays of creativity (e.g. animated character, scrolling background, obstacles or platforms, sound effects, etc) are awarded by another point.
+
+\end{exercise}
+
+\end{document}
