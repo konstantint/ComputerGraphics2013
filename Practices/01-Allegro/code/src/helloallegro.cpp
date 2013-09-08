@@ -9,7 +9,6 @@ using namespace std;
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_color.h>
 #include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 
 // ---------------------------- Global variables -------------------------- //
@@ -86,19 +85,17 @@ void init() {
     al_install_keyboard();
     al_register_event_source(event_queue, al_get_keyboard_event_source());
 
-    // Finally, to draw the primitives (circles, etc) we need to init the corresponding addons.
+    // To draw the primitives (circles, etc) we need to init the corresponding addons.
     al_init_primitives_addon();
-
-    // Initialize font for text drawing
-    al_init_font_addon();
-    al_init_ttf_addon();
-    my_font = al_load_font("../data/pirulen.ttf", 25, 0);
-
 
     // Load images
     al_init_image_addon();
     photo = al_load_bitmap("../data/photo.jpg");
     kitten = al_load_bitmap("../data/kitten.png");
+
+    // Initialize font for text drawing
+    al_init_font_addon();
+    my_font = al_load_font("../data/a4_font.tga", 0, 0);
 
     // We will be showing one of three different scenes.
     current_scene_id = 0;
