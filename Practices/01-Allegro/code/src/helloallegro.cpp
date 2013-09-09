@@ -12,8 +12,8 @@ using namespace std;
 #include <allegro5/allegro_image.h>
 
 // ---------------------------- Global variables -------------------------- //
-ALLEGRO_DISPLAY     *display;
-ALLEGRO_EVENT_QUEUE *event_queue;
+ALLEGRO_DISPLAY*    display;
+ALLEGRO_EVENT_QUEUE* event_queue;
 ALLEGRO_EVENT       event;
 ALLEGRO_FONT*       my_font;
 ALLEGRO_BITMAP*     photo;
