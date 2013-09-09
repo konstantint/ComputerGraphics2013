@@ -30,7 +30,7 @@
 			<Add library="allegro_color" />
 			<Add library="allegro_audio" />
 			<Add library="allegro_image" />
-			<Add directory="lib/linux_x86" />
+			<Add directory="lib/linux_x86_64" />
 		</Linker>
 		<Unit filename="src/helloallegro.cpp" />
 		<Extensions>
