@@ -1,0 +1,186 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, mdwlist, graphicx, hyperref}
+\usepackage{listings,color}
+\usepackage[usenames,dvipsnames]{xcolor}
+\definecolor{gray}{rgb}{0.97,0.97,0.97}
+\lstset{%
+language=Python,%
+%backgroundcolor=\color{gray},
+emph={putpixel},
+emphstyle=\bf,
+tabsize=4,
+framesep=5pt,
+mathescape=true,
+xleftmargin=2cm,
+xrightmargin=2cm,
+frame=lines,
+%basicstyle=\ttfamily,
+%keywordstyle=\color{Blue},
+%commentstyle=\color{OliveGreen},
+%stringstyle=\color{MidnightBlue},
+columns=flexible,
+%showstringspaces=false
+}
+
+\newcommand{\mpar}[1]{\marginpar{\textit{#1}}}
+\newcommand{\norm}[1]{\Vert #1 \Vert}
+\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\argmin}{argmin}
+\newenvironment{solution}{\paragraph{Solution.}$\,$ }{\vskip 3mm\hrule}
+\newenvironment{exercise}[2]{\paragraph{Exercise #1 (#2pt).} }{\medskip}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bd}{\mathbf{d}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bzero}{\mathbf{0}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bSigma}{\mathbf{\Sigma}}
+\newcommand{\bp}{\mathbf{p}}
+\newcommand{\bm}{\mathbf{m}}
+\newcommand{\bM}{\mathbf{M}}
+\newcommand{\bK}{\mathbf{K}}
+\newcommand{\bD}{\mathbf{D}}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bR}{\mathbf{R}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bS}{\mathbf{S}}
+\newcommand{\bT}{\mathbf{T}}
+\newcommand{\balpha}{\boldsymbol{\alpha}}
+\newcommand{\pt}[2]{\left(\begin{array}{c}#1\\#2\end{array}\right)}
+
+\begin{document}
+\title{MTAT.03.015 Computer Graphics (Fall 2013)\\
+Exercise session II: Rasterization of Lines}
+\author{Konstantin Tretyakov, Ilya Kuzovkin}
+\date{September 16, 2013}
+\maketitle
+
+The algorithms for rasterization of basic primitives, such as lines, curves, circles or polygons, are probably among the most frequently invoked functions in the world. Think of it: each window on the screen of your computer, each menu element and button, each letter, that appears when you type, consists of multiple small line or curve segments and polygons. Each of those segments has to be rendered onto the screen every time the corresponding part of the screen is redrawn. And the screen does need to be redrawn quite often! Think about what happens behind the scenes when you do something as simple as scrolling down a webpage.
+
+Consequently, rasterization of basic primitives must be performed extremely fast, and a lot of work has been put into development of ways to achieve that. Today we shall have a glimpse at one classical method for fast rasterization of lines -- the Bresenham's algorithm.
+
+The base code is provided in the \texttt{practice02.zip/practice02.tgz} archive on the course website\footnote{Alternatively, all lecture slides and practice session materials are also available on Github: \url{http://github.org/konstantint/ComputerGraphics2013}}. Download, unpack and open it. You will have to write all the code (except for the last bonus task) within the \texttt{lines.cpp} file. Hence, you may submit your solution as just this single file (perhaps bundled into an archive with the bonus task solution).
+
+\section{Basic Line Rasterization}
+Consider the problem of rasterizing a straight line segment between pixels $\bp_1 = (x_1, y_1)$ and $\bp_2 = (x_2, y_2)$. Recall that the set of all points $\{\bx\}$ on this segment can be mathematically described as
+$$
+\bx = \bp_1 + t(\bp_2 - \bp_1),\qquad t \in [0, 1].
+$$
+Boldface letters denote vectors, hence the latter equation should be understood as
+$$
+\pt{x}{y} = \pt{x_1}{y_1} + t\left[\pt{x_2}{y_2}-\pt{x_1}{y_1}\right],
+$$
+or, writing it even more explicitly, as:
+$$
+\begin{cases}
+&x = x_1 + t(x_2 - x_1) \\
+&y = y_1 + t(y_2 - y_1).
+\end{cases}
+$$
+If we fix $x$, we can find 
+$t = \frac{x - x_1}{x_2 - x_1},$
+and solve the equations for $y$:
+$$
+y = y_1 + \frac{x - x_1}{x_2 - x_1}(y_2 - y_1) = b + kx
+$$
+where
+$$
+k = \frac{y_2 - y_1}{x_2 - x_1},\qquad b = y_1 - kx_1.
+$$
+This suggests a straightforward algorithm to draw a line segment: 
+\begin{lstlisting}
+	for $x$ in [$x_1 \dots x_2$]:
+		putpixel $(x,\, b + k\cdot x)$
+\end{lstlisting}
+
+\begin{exercise}{1}{0.5}
+Implement this algorithm within the function \verb#simple_line#.
+\end{exercise}
+
+You will notice, that the algorithm, in the way it is specified above, is bad at drawing steep lines and is completely incapable of drawing vertical lines. The solution to this problem is to act differently, depending on whether $|x_2 - x_1| > |y_2 - y_1|$ or not. If it is true (i.e. line is not steep), we use the algorithm above (iterating along $x$ and solving for $y$). Otherwise, we iterate along $y$ instead and for each $y$ find the corresponding $x$. The complete algorithm is then something like the following:
+\begin{lstlisting}
+	if $|x_2 - x_1| > |y_2 - y_1|$:
+		for $x$ in [$x_1 \dots x_2$]:
+ 			putpixel $(x,\, b + k\cdot x)$
+	else:
+		for $y$ in [$y_1 \dots y_2$]:
+			putpixel (???, $y$)
+\end{lstlisting}
+
+\begin{exercise}{2}{0.5}
+Complete the implementation of \verb#simple_line# function so that it would be capable of drawing lines in all directions equally well.
+\end{exercise}
+
+\newpage
+\section{Bresenham's Line Algorithm}
+The algorithm you have just implemented is a rather inefficient way of drawing lines: it requires one floating point multiplication and one floating point addition per pixel. It turns out that it can be significantly optimized to use only integer operations.
+
+Firstly, instead of computing $y = b + kx$ on each iteration we can observe that in fact, the $y$ variable simply starts at $y_1$ and then is incremented by $k$ each time $x$ increases by $1$, i.e. we could get rid of multiplication as follows:
+\begin{lstlisting}
+	$k$ = $(y_2 - y_1)/(x_2 - x_1)$
+	$y$ = $y_1$
+	for $x$ in [$x_1 \dots x_2$]:
+ 		putpixel $(x, y)$
+		$y$ += $k$
+\end{lstlisting}
+
+Secondly, we can only put pixels at integer locations, so instead of keeping track of a (floating point) $y$ variable, we shall decompose it into an \emph{integer component} $y_{\mathrm{int}}$ (the actual coordinate where the pixel is drawn) and an \emph{error term} $e$:
+$$
+ y := y_\mathrm{int} + e.
+$$ 
+Initially $y_\mathrm{int} = y_1$ and $e=0$ (because $y_1$ is in integer).
+
+Finally, whenever we had to add $k$ to $y$ before, we shall now add this value to the error term instead:
+$$
+  e\text{ += }k,
+$$
+As the error term grows, at some point it may become greater than $0.5$ (or smaller than $-0.5$). In this case we ``transfer'' an amount of 1 from the error term into the $y_\mathrm{int}$, thus moving vertically to the next pixel.
+The resulting algorithm looks as follows:
+\begin{lstlisting}
+	$k$ = $(y_2 - y_1)/(x_2 - x_1)$
+	$y_\mathrm{int}$ = $y_1$
+	$e$ = 0.0
+	for $x$ in [$x_1 \dots x_2$]:
+ 		putpixel $(x,\, y_\mathrm{int})$
+		$e$ += $k$
+		if $e > 0.5$:
+			$y_\mathrm{int}$ += 1
+			$e$ -= 1.0
+		else if $e < -0.5$:
+			$y_\mathrm{int}$ -= 1
+			$e$ += 1.0
+\end{lstlisting}
+
+\begin{exercise}{3}{0.5}
+Implement the algorithm above within the \verb#bresenham_line# function. Note that this is still not the actual Bresenham's algorithm (it uses floating point computations). Also note that this algorithm only makes sense for $|k|\leq 1$, i.e. for non-steep lines.
+\end{exercise}
+
+To finally get rid of the floating point computations it suffices to multiply every line that uses the error term $e$ with $2(x_2 - x_1)$ on both sides. Formally, let $e_\mathrm{int} := 2(x_2 - x_1)e$. Now multiplying the sixth line of the previous algorithm by $2(x_2 - x_1)$ we obtain
+$$
+ 2(x_2 - x_1)e\text{ += }2(x_2 - x_1)k,
+$$
+which simplifies to
+$$
+ e_\mathrm{int}\text{ += }2(y_2 - y_1).
+$$
+
+\begin{exercise}{4}{0.5}
+Transform the previous algorithm to use an integer value $e_\mathrm{int}$ instead of $e$ everywhere. Update your implementation of \verb#bresenham_line#. Make sure the resulting function uses only \texttt{int} variables.
+\end{exercise}
+
+\begin{exercise}{5}{0.5}
+Your current implementation of \verb#bresenham_line# can only draw ``non-steep'' lines with $x_2 > x_1$. Finish the algorithm to account for all possible orientations of the line.
+\end{exercise}
+
+\begin{exercise}{6*}{0.5}
+Study the description of Xiaolin Wu's algorithm for drawing smoothed lines given in Wikipedia\footnote{\url{http://en.wikipedia.org/wiki/Xiaolin_Wu\%27s_line_algorithm}}. Modify the \verb#simple_line# routine to implement line smoothing in the same way as it is done in the Wu's algorithm. Hint: You may ignore the endpoint handling parts and only study what is done in the main loop.
+\end{exercise}
+
+\begin{exercise}{7*}{1}
+The game PONG\footnote{\url{http://en.wikipedia.org/wiki/Pong}} is widely regarded as the mother of all video games. Use the skills you gained in the last week's exercise session to implement it. Your game should allow two players to play against each other using the keyboard. There must be a "Start Game" scene, an actual gameplay scene, where the players control the paddles, and a "Game Over" scene, which is shown when either of the players achieves a score of 10.
+\end{exercise}
+\end{document}
