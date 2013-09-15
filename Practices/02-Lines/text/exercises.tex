@@ -27,7 +27,8 @@ columns=flexible,
 \DeclareMathOperator{\argmax}{argmax}
 \DeclareMathOperator{\argmin}{argmin}
 \newenvironment{solution}{\paragraph{Solution.}$\,$ }{\vskip 3mm\hrule}
-\newenvironment{exercise}[2]{\paragraph{Exercise #1 (#2pt).} }{\medskip}
+\newenvironment{exercise}[2]{\begin{verse}\textbf{Exercise #1 (#2pt).} }{
+\end{verse}\medskip}
 \newcommand{\bbR}{\mathbb{R}}
 \newcommand{\bw}{\mathbf{w}}
 \newcommand{\bx}{\mathbf{x}}
@@ -159,11 +160,11 @@ The resulting algorithm looks as follows:
 Implement the algorithm above within the \verb#bresenham_line# function. Note that this is still not the actual Bresenham's algorithm (it uses floating point computations). Also note that this algorithm only makes sense for $|k|\leq 1$, i.e. for non-steep lines.
 \end{exercise}
 
-To finally get rid of the floating point computations it suffices to multiply every line that uses the error term $e$ with $2(x_2 - x_1)$ on both sides. Formally, let $e_\mathrm{int} := 2(x_2 - x_1)e$. Now multiplying the sixth line of the previous algorithm by $2(x_2 - x_1)$ we obtain
+To finally get rid of the floating point computations it suffices to multiply every line of code that uses the error term $e$ with $2(x_2 - x_1)$ on both sides. That is, let $e_\mathrm{int} := 2(x_2 - x_1)e$. Now, multiplying the sixth line of the previous algorithm by $2(x_2 - x_1)$ we turn it into
 $$
  2(x_2 - x_1)e\text{ += }2(x_2 - x_1)k,
 $$
-which simplifies to
+which simplifies to a purely integer-based computation:
 $$
  e_\mathrm{int}\text{ += }2(y_2 - y_1).
 $$
