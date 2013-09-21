@@ -252,7 +252,7 @@ void color_triangle(int x1, int y1, int x2, int y2, int x3, int y3, vector3f c1,
  */
 void textured_triangle(int x1, int y1, int x2, int y2, int x3, int y3, vector3f uv1, vector3f uv2, vector3f uv3) {
     // Sort points vertically
-    sort_triangle_with_attributes(x1, y1, x2, y2, x3, y3, c1, c2, c3);
+    sort_triangle_with_attributes(x1, y1, x2, y2, x3, y3, uv1, uv2, uv3);
 
     // This routine can be literally a copy-paste of color_triangle (rename uv1, uv2, uv3 to c1, c2, c3, though)
     // with the gradient_line invocation replaced by textured_line (not provided)
