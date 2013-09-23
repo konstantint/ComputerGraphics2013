@@ -27,6 +27,7 @@
 			<Add library="allegro_main" />
 			<Add library="allegro_primitives" />
 			<Add library="allegro_color" />
+			<Add library="allegro_image" />
 			<Add directory="lib/linux_x86_64" />
 		</Linker>
 		<Unit filename="src/triangles.cpp" />
