@@ -69,16 +69,24 @@ As usual, the base code is provided in the \texttt{practice04.zip} archive on th
 \section*{GLUT and OpenGL}
 OpenGL is a purely graphics-oriented API. There are no functions in it that are related to such tasks as creating windows or receiving keyboard and mouse input. Such operations should be done by external means (e.g. using operating system calls).
 
-For example, you can create a window using Allegro (like we did in the previous sessions) and then use OpenGL functions to draw on it. Instead of Allegro, however, we shall be using the library called ``FreeGLUT'' \emph{(Free GL Utility Toolkit)} to create windows and process events, as it is somewhat more lightweight.
+For example, you can create a window using Allegro (like we did in the previous sessions) and then use OpenGL functions to draw on it. Instead of Allegro, however, we shall be using the FreeGLUT \emph{(Free GL Utility Toolkit)} library to create windows and process events, as it is somewhat more lightweight.
 
-Open the project \verb#1_HelloOpenGL.cbp# in CodeBlocks and study the code. Hopefully you will recognize the familiar structure of initializing the program, defining event handlers, and running the event loop, which will periodically invoke the event handlers and the display routine.
+\begin{verse}
+\textbf{Note:} The OpenGL library and headers are nearly always provided with the operating system and the development environment. The FreeGLUT library for Windows is bundled with the practice session materials. Users of Linux systems should install it, together with the GLU utility library by running
+\begin{verbatim}
+     apt-get install freeglut3-dev libglu-dev
+\end{verbatim}
+on Debian-based systems, or something similar for other distributions.
+\end{verse}
+
+Open the project \verb#1_HelloOpenGL# in CodeBlocks and study the code. Hopefully you will recognize the familiar structure of initializing the program, defining event handlers, and running the event loop, which will periodically invoke the event handlers and the display routine.
 
 Play a bit with the code. Find the place where you can specify your own model-view matrix for the triangle scene and see how the use of \texttt{glTranslate}, \texttt{glRotate} and \texttt{glScale} functions influences the position of the triangle.
 
 \begin{exercise}{1}{0.5} 
 Make the triangle rotate slowly around the point $(0, 0.5)$.
 
-Hint: \verb#glutGet(GLUT_ELAPSED_TIME)# returns the time elapsed since the program was started in milliseconds, as an \texttt{int}).
+Hint: \verb#glutGet(GLUT_ELAPSED_TIME)# returns the time elapsed since the program was started in milliseconds, as an \texttt{int}.
 \end{exercise}
 
 \begin{exercise}{2}{0.5} 
@@ -93,7 +101,7 @@ Hint: Your new version of \verb#draw_tree# will become recursive and will take a
 \section*{3D Graphics}
 Although the previous two exercises were two-dimensional, OpenGL is an inherently three-dimensional system. We were simply drawing everything in the plane $z=0$, which happens to be the projection plane. Try adding a rotation around the $x$ axis to any of the previous examples and see what happens.
 
-Now, however, let us examine a purely three-dimensional example. Open the project file \verb#2_Cube.cbp#. Study the code. Note that it uses perspective projection and the z-buffer algorithm -- something that will be covered in the upcoming lectures. So far just take the provided set up for granted.
+Now, however, let us examine a purely three-dimensional example. Open the project file \verb#2_Cube#. Study the code. Note that it uses perspective projection and the z-buffer algorithm -- something that will be covered in the upcoming lectures. So far just take the provided set up for granted.
 
 \begin{exercise}{3}{0.5}
 Complete the implementation of \verb#draw_cube# so that the complete cube is drawn. Also, currently the cube is rotating on its own. Make it possible to rotate the cube interactively using the mouse (the exact behaviour of this interaction is up to you to choose, but even the simplest solution will do).
@@ -101,7 +109,7 @@ Complete the implementation of \verb#draw_cube# so that the complete cube is dra
 
 
 \begin{exercise}{4}{1}
-Finally, open the project \verb#3_Solar.cbp#. Your task here is to implement a simple visualization of the Solar system. As a minimum, you should add four planets (Mercury, Venus, Earth and the Moon), making sure each planet rotates along its own circular orbit at its own pace.
+Finally, open the project \verb#3_Solar#. Your task here is to implement a simple visualization of the Solar system. As a minimum, you should add four planets (Mercury, Venus, Earth and the Moon), making sure each planet rotates along its own circular orbit at its own pace.
 
 You are encouraged (although not enforced) to make the model more realistic by ensuring the orbital periods for the planets are correct. You can also add more planets and set the view transformation to something better than what is given, if you wish.
 \end{exercise}
@@ -111,7 +119,7 @@ Note that GLUT provides you with a bunch of pre-made primitive rendering functio
 \begin{exercise}{5*}{2}
 Implement a three dimensional version of the ``jumping guy game'' from the first practice session. The character must be able to walk on a square field. The player should be able to control the character using the arrow keys (move around) and the spacebar (jump).
 
-Hint: You do not have to make the character very detailed. Something like a \texttt{glutSolidCylinder} combined with a \texttt{glutSolidSphere} will do. If you want, though, you can try finding a suitable 3D model in the Wavefront .obj format and using it as shown in \verb#4_Object.cbp#.
+Hint: You do not have to make the character very detailed. Something like a \texttt{glutSolidCylinder} combined with a \texttt{glutSolidSphere} will do. If you want, though, you can try finding a suitable 3D model in the Wavefront .obj format and using it as shown in \verb#4_Object#.
 
 Hint: To respond to arrow keys you will need \texttt{glutSpecialFunc}, rather than \texttt{glutKeyboardFunc}.
 \end{exercise}
