@@ -77,6 +77,13 @@ For example, you can create a window using Allegro (like we did in the previous 
      apt-get install freeglut3-dev libglu-dev
 \end{verbatim}
 on Debian-based systems, or something similar for other distributions.
+
+\noindent
+On Mac you should install \texttt{freeglut} from MacPorts:
+\begin{verbatim}
+     sudo port install freeglut
+\end{verbatim}
+then add \texttt{/opt/local/include} to the compiler search path, \texttt{/opt/local/lib/} to the linker search path, and link with \texttt{glut} and \texttt{OpenGL.framework}. 
 \end{verse}
 
 Open the project \verb#1_HelloOpenGL# in CodeBlocks and study the code. Hopefully you will recognize the familiar structure of initializing the program, defining event handlers, and running the event loop, which will periodically invoke the event handlers and the display routine.
@@ -114,14 +121,22 @@ Finally, open the project \verb#3_Solar#. Your task here is to implement a simpl
 You are encouraged (although not enforced) to make the model more realistic by ensuring the orbital periods for the planets are correct. You can also add more planets and set the view transformation to something better than what is given, if you wish.
 \end{exercise}
 
-Note that GLUT provides you with a bunch of pre-made primitive rendering functions, such as \texttt{glutSolidSphere}. In fact, if you needed to draw a solid-color cube in Exercise 3, you could get away by simply using \texttt{glutSolidCube}.
+Note that GLUT provides you with a bunch of pre-made primitive rendering functions, such as \texttt{glutSolidSphere}, that emit the constituent triangles as necessary. In fact, if you needed to draw a solid-color cube in Exercise 3, you could get away by simply using \texttt{glutSolidCube}.
 
-\begin{exercise}{5*}{2}
+\begin{exercise}{5*}{1-2}
 Implement a three dimensional version of the ``jumping guy game'' from the first practice session. The character must be able to walk on a square field. The player should be able to control the character using the arrow keys (move around) and the spacebar (jump).
 
-Hint: You do not have to make the character very detailed. Something like a \texttt{glutSolidCylinder} combined with a \texttt{glutSolidSphere} will do. If you want, though, you can try finding a suitable 3D model in the Wavefront .obj format and using it as shown in \verb#4_Object#.
+Hint: You do not have to make the character very detailed. Something like a \texttt{glutSolidCylinder} combined with a \texttt{glutSolidSphere} will do. If you want, though, you can try finding (or making) a suitable 3D model in the Wavefront .obj format and using it as shown in \verb#4_Object#.
 
 Hint: To respond to arrow keys you will need \texttt{glutSpecialFunc}, rather than \texttt{glutKeyboardFunc}.
+
+Something simple (e.g. making the guy in \verb#4_Object# move around) gives 1 point. Displays of creativity are awarded with an additional point.
+\end{exercise}
+
+\begin{exercise}{6*}{0.5}
+Make the tree from the exercise 2 three-dimensional. Use appropriately-sized \texttt{glutSolidCylinder}s as the branches, simple triangles for the leaves, and make the branching topology three-dimensional (i.e. rather than having two branches go ``left'' and ``right'', have three or more branches at each level go in various directions).
+
+Do not forget that you need to enable perspective projection and depth buffer.
 \end{exercise}
 
 \end{document}
