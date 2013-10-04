@@ -13,10 +13,9 @@ using namespace std;
 // --------------- Forward declarations ------------- //
 int main(int argc, char* argv[]);
 void keyboard(unsigned char key, int x, int y);
-void display();
 
 // Complete this routine
-void draw_cube();
+void display();
 
 // ----------------------------------------------- //
 /**
@@ -82,10 +81,8 @@ void display() {
     // onto point (0, 0, 0) with our "top" pointing towards (0, 0, 1);
     gluLookAt(0, -250, 100, 0, 0, 0, 0, 0, 1);
 
-    // Rotate
+    // Elapsed time
     float time = glutGet(GLUT_ELAPSED_TIME);
-    // Have the earth make a full circle along its orbit in 10 seconds.
-    //glRotatef(time/100, 0.0, 1.0, 1.0);
 
     // Draw planets
     // The Sun
