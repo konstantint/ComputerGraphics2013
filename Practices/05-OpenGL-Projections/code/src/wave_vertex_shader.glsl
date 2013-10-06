@@ -1,5 +1,5 @@
-#version 130
-out vec4 vertex_color;
+#version 120
+varying vec4 vertex_color;
 uniform float time;
 
 void main(void) {

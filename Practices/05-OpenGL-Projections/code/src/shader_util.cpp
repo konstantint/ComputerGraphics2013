@@ -45,16 +45,16 @@ GLuint compile(GLuint type, std::string source) {
  * Default shaders.
  */
 const GLchar *default_vertex_shader =
-    "#version 130\n"
-    "smooth out vec4 vertex_color\n;"
+    "#version 120\n"
+    "varying vec4 vertex_color\n;"
     "void main(void) {\n"
     "    gl_Position = ftransform();\n"
     "    vertex_color = gl_Color;\n"
     "}";
 
 const GLchar *default_fragment_shader = // Only supports coloring. Textures require custom stuff.
-    "#version 130\n"
-    "smooth in vec4 vertex_color;\n"
+    "#version 120\n"
+    "varying vec4 vertex_color;\n"
     "void main() {\n"
     "    gl_FragColor = vertex_color;\n"
     "}";

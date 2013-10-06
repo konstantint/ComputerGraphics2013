@@ -1,5 +1,10 @@
-#version 130
-out vec4 vertex_color;
+#version 120
+// Note: The version specification above is compulsory (although things might work without it on some cards)
+// GLSL version 1.2 is fairly old by now, and I would rather prefer teaching with version 1.3+.
+// However it turns out some laptops as well as VirtualBox installations would only suport version 1.2.
+
+varying vec4 vertex_color;   // The newer equivalent declaration is "smooth out vec4 vertex_color".
+
 uniform mat4 transformation_matrix; // We shall connect this to a custom transformation matrix in our display() function.
 
 void main(void) {
