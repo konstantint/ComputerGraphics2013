@@ -118,10 +118,19 @@ Open the project \verb#2_HelloGLSL# and study its structure. Although it should 
 \begin{itemize}
 \item Writing \verb@#include <GL/glew.h>@ in your program.
 \item Invoking \verb#glewInit()# during initialization.
-\item Adding \verb#glew32# to the list of libraries to link with (in the \emph{Build Options} dialog).
+\item Adding \verb#glew32# (Windows) or \verb#GLEW# (Linux, Mac) to the list of libraries to link with (in the \emph{Build Options} dialog).
 \end{itemize}
 Once it is done, you can automatically use all of the newer OpenGL functions, supported by your graphics card.
 
+\begin{verse} \textbf{Note:} The Windows version of the GLEW library is bundled with the base code. Linux users, please install the library by doing something like 
+\begin{verbatim}
+     sudo apt-get install libglew-dev
+\end{verbatim}
+(or equivalent). Mac users should do  
+\begin{verbatim}
+     sudo port install glew
+\end{verbatim}
+\end{verse}
 \item Secondly, the project consists of more than one source file. Besides\\ \verb#hello_glsl.cpp#, which contains the main code of the program, there is \verb#shader_util.cpp#. This file has some useful functions and classes, which you do not need to worry about. Note, however, that the \emph{declarations} of those functions and classes are given in a separate \emph{header file}, \verb#shader_util.h#. This file is \verb@#include@-d in the main program, which lets you use the functions, just like you do with system libraries.
 
 \item Finally, and most importantly, there is a separate file, \verb#simple_vertex_shader.glsl#, which contains the code for the custom vertex shader program in GLSL. This shader is loaded and enabled in the \verb#display# function using the code:
@@ -149,18 +158,18 @@ Play with the code provided in \\ \noindent\verb#simple_vertex_shader.glsl#. Try
 \begin{exercise}{6}{1}
 Open the project \verb#3_Wave#. It currently renders a simple wireframe sphere. Your task is to design a vertex shader (in the file \verb#wave_vertex_shader.glsl#) that would make the sphere ``wavy''. You are free to interpret the concept of ``waviness'' to your liking, but the kind of thing you should aim to get is illustrated on the picture below:
 \begin{center}
-\includegraphics[width=0.8\textwidth]{wave.png}
+\includegraphics[width=0.5\textwidth]{wave.png}
 \end{center}
-You are welcome to have the wave actually oscillate (for this purpose there is already a \texttt{time} uniform set up in the shader for you).
+You are welcome to have the wave actually move (for this purpose there is already a \texttt{time} uniform set up in the shader for you).
 
-Hint: What you want to do is to shift the position of each vertex back and forth according to a sinewave along the direction of the normal at this vertex. The normal direction can be obtained using the \verb#gl_Normal# built-in variable. The phase of the sinewave could depend on the $z$ coordinate and/or the \texttt{atan(y, x)} angle. You can also try multiplying sinewaves together to achieve the necessary effect.
+Hint: What you want to do is to shift the position of each vertex back and forth according to a sinewave along the direction of the normal at this vertex. The normal direction can be obtained using the \verb#gl_Normal# built-in variable. The phase of the sinewave could depend on the $z$ coordinate of the vertex and/or the \texttt{atan(y, x)} angle. You can also try multiplying sinewaves together to achieve the necessary effect.
 
 Hint: It seems that the \verb#gl_Normal# vectors that FreeGLUT outputs for the vertices of the sphere do not have their fourth element equal to zero (looks like a FreeGLUT bug to me). This may result in unexpected results. To fix this do something like
 \begin{verbatim}
-vec4 normal = vec4(gl_Normal.xyz, 0);
+  vec4 normal = vec4(gl_Normal.xyz, 0);
 \end{verbatim}
 \end{exercise}
 
-Note that if you develop a complex scene with several objects, it is completely normal to have a separate shader for each object. For example, you could have several wavy spheres flying around, each with its own ``waviness'' pattern.
+Note that if you develop a complex scene with several objects, it is completely normal to have a separate shader assigned to each object. For example, you could have several wavy spheres flying around, each with its own ``waviness'' pattern. Conversely, you can also reuse the same shader effect for different objects: try replacing the \verb#glutSolidSphere# with a \verb#glutSolidCylinder#, for example, while keeping the same shader.
 
 \end{document}

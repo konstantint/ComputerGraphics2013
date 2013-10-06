@@ -2,6 +2,16 @@
 *.slo
 *.lo
 *.o
+
 # CodeBlocks files
 *.depend
 *.layout
+
+# Tex files
+*.aux
+*.log
+*.out
+*.synctex.gz
+
+# Executables
+*.exe
