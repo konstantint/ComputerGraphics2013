@@ -8,6 +8,9 @@ using namespace std;
 #include <GL/freeglut.h>
 #define GLUT_KEY_ESCAPE 27  // The keycode for the escape key.
 #define GLUT_KEY_ENTER 13   // The keycode for "enter" key.
+// In some VirtualBox VMs program crashes on glutCreateWindow. Invoking this beforehand magically fixes the problem.
+// http://stackoverflow.com/questions/9759898/opengl-glut-on-virtualbox-ubuntu-11-10-segmentation-fault
+#define GLUT_VIRTUAL_BOX_FIX glutGet(GLUT_DISPLAY_MODE_POSSIBLE);
 
 
 // --------------- Forward declarations ------------- //
@@ -31,6 +34,7 @@ int main(int argc, char* argv[]) {
     // Specify size and position of a window and create it
     glutInitWindowSize(400, 400);
     glutInitWindowPosition(30,30);
+    GLUT_VIRTUAL_BOX_FIX;
     glutCreateWindow("The Cube");
 
     // Register handlers

@@ -23,10 +23,10 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add directory="include" />
 		</Compiler>
 		<Linker>
 			<Add library="glut" />
+			<Add library="GL" />
 			<Add directory="lib" />
 		</Linker>
 		<Unit filename="src/hello.cpp" />
