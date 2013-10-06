@@ -2,3 +2,6 @@
 *.slo
 *.lo
 *.o
+# CodeBlocks files
+*.depend
+*.layout

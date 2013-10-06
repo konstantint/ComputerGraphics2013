@@ -25,12 +25,9 @@
 			<Add directory="include" />
 		</Compiler>
 		<Linker>
-			<Add library="freeglut" />
-			<Add library="opengl32" />
-			<Add library="glu32" />
-			<Add library="winmm" />
-			<Add library="gdi32" />
-			<Add directory="lib" />
+			<Add library="glut" />
+			<Add library="GL" />
+			<Add library="GLU" />
 		</Linker>
 		<Unit filename="src/clip_volume.cpp" />
 		<Unit filename="src/glu_invert_matrix.cpp" />

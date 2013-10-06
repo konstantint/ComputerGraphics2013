@@ -7,8 +7,6 @@ using namespace std;
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
-#define GLUT_KEY_ESCAPE 27  // The keycode for the escape key.
-#define GLUT_KEY_ENTER 13   // The keycode for "enter" key.
 
 #include "shader_util.h"
 
@@ -30,6 +28,7 @@ int main(int argc, char* argv[]) {
     // Specify size and position of a window and create it
     glutInitWindowSize(400, 400);
     glutCreateWindow("Wave");
+
     // Initialize GL extensions
     glewInit();
     if (!GLEW_VERSION_2_0) {
@@ -56,7 +55,7 @@ int main(int argc, char* argv[]) {
  * Keyboard handler
  */
 void keyboard(unsigned char key, int x, int y) {
-    if (key == GLUT_KEY_ESCAPE || key == ' ') glutLeaveMainLoop();
+    if (key == 27 || key == ' ') glutLeaveMainLoop();
 }
 
 // ----------------------------------------------- //
@@ -73,7 +72,7 @@ void display() {
 
     // Send current time in seconds as a float to the shader
     float time = (float)glutGet(GLUT_ELAPSED_TIME)/1000;
-    GLint variable_location = glGetUniformLocation(shader, "time");
+    GLint variable_location = glGetUniformLocation((GLuint)shader, "time");
     glUniform1f(variable_location, time);
 
     // Draw a sphere
