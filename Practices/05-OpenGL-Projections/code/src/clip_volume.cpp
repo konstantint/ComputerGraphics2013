@@ -160,7 +160,6 @@ void display() {
     glTranslatef(0, 0, 5);
     draw_scene();
     draw_clip_volume(projection_function);  // Add clip volume to the drawing
-    glutSolidSphere(0.1, 5, 5);
 
     // Bottom right -------------------------------------------
     // Clip volume after projection
