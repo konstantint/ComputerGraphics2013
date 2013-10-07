@@ -15,3 +15,4 @@
 
 # Executables
 *.exe
+!Lectures/06 - Hidden Surface Removal/DemoApp/bin/DemoApp.exe
