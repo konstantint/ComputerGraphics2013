@@ -56,23 +56,33 @@ int main(int argc, char* argv[]) {
     glEnable(GL_POLYGON_SMOOTH);// Polygon antialiasing
     glEnable(GL_BLEND);         // Antialiasing works only with blending enabled
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glLineWidth(1.5);
+    glLineWidth(1.1);
 
-    scenes.push(new FirstScene());
-    scenes.push(new SecondScene());
-    scenes.push(new ThirdScene());
-    scenes.push(new FourthScene());
-    scenes.push(new FifthScene());
-    scenes.push(new SixthScene(false, false, false, false));
-    scenes.push(new SixthScene(true, false, false, false));
-    scenes.push(new SixthScene(true, true, false, false));
-    scenes.push(new SixthScene(true, true, true, true));
+    scenes.push(new EmptyScene());
+    scenes.push(new ConstructObjectScene());
+    scenes.push(new ModelViewTransformScene());
+    scenes.push(new FrustumScene());
+    scenes.push(new ProjectionTransformScene());
+    scenes.push(new MoveClipSpaceIntoViewScene());
+    scenes.push(new PolygonFillScene("Filling triangles with solid color", false, false));
+    scenes.push(new PolygonFillScene("Making the color of the triangle depend on orientation wrt light", true, false));
+    scenes.push(new PainterAlgorithmScene());
+    scenes.push(new PainterAlgorithmFailScene());
+    scenes.push(new PolygonFillScene("Z-buffer", true, true));
+    scenes.push(new DepthScene());
+    scenes.push(new DepthPrepassScene());
+    scenes.push(new PolygonFillScene("Front-face culling", true, false, false, false, true, true));
+    scenes.push(new PolygonFillScene("Back-face culling", true, false, false, false, true, false));
+    scenes.push(new PolygonFillScene("Back-face culling & Z-buffer", true, true, false, false, true, false));
+    scenes.push(new BackFaceCullFailScene());
+    scenes.push(new PolygonFillScene("", true, true, false, true));
+    scenes.push(new PolygonFillScene("Rasterizing with color interpolation", true, true, true, true));
     scenes.current()->start();
 
     // Run the event loop
     glutMainLoop();
 
-    for (int i = 0; i < scenes.size(); i++) delete scenes[i];
+    for (unsigned int i = 0; i < scenes.size(); i++) delete scenes[i];
     return 0;
 }
 

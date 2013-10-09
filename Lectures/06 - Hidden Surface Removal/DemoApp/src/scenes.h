@@ -7,15 +7,47 @@
  * Copyright 2013, Konstantin Tretyakov.
  */
 #include "scene_util.h"
+#include "triangles.h"
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 class Scene {
 public:
-    virtual void draw() = 0;
+    virtual void draw() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    };
     virtual void start() { };
     virtual void idle() {
         glutPostRedisplay();
+    }
+    virtual ~Scene() {};
+};
+
+class BaseScene: public Scene {
+public:
+    vector<Triangle> triangles;
+    int t, n;
+    void start() {
+        triangles = make_scene();
+        glMatrixMode(GL_PROJECTION);    // Set default projection and lighing
+            glLoadIdentity();
+            gluPerspective(DOF_Y, ASPECT_RATIO, 1, 100);
+        glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+        glEnable(GL_LIGHTING);
+        float light_pos[] = {0, 0, 0, 1};
+        glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+        glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.5f);
+        glShadeModel(GL_FLAT);
+        t = glutGet(GLUT_ELAPSED_TIME);
+    }
+    void idle() {
+        n = (glutGet(GLUT_ELAPSED_TIME) - t)/30;
+        glutPostRedisplay();
+    }
+    void label(const char* text) {
+        draw_label(-0.9, 0.9, text);
     }
 };
 
@@ -27,7 +59,7 @@ public:
     }
     void next() {
         current_scene_id++;
-        if (current_scene_id >= this->size()) current_scene_id = 0;
+        if (current_scene_id >= (int)this->size()) current_scene_id = 0;
         current()->start();
     }
     void prev() {
@@ -38,45 +70,189 @@ public:
     void push(Scene* s) { this->push_back(s); }
 };
 
-class SixthScene: public Scene {
+class EmptyScene: public Scene {
+};
+
+
+class DepthPrepassScene: public BaseScene {
 public:
-    int n, t;
-    bool with_lighting, with_depth, with_smooth, fast;
-    SixthScene(bool with_lighting, bool with_depth, bool with_smooth, bool fast):
-        with_lighting(with_lighting), with_depth(with_depth), with_smooth(with_smooth), fast(fast) {
+    float* depth_data;
+    int w, h;
+    DepthPrepassScene(): BaseScene() {
+        w = glutGet(GLUT_WINDOW_WIDTH);
+        h = glutGet(GLUT_WINDOW_HEIGHT);
+        depth_data = (float*)malloc(w*h*sizeof(float));
+    }
+    ~DepthPrepassScene() {
+        free(depth_data);
     }
     void start() {
+        BaseScene::start();
+        get_depth_buffer(-1);
+    }
+    void get_depth_buffer(int num_elements) {
         glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
             setup_scene_projection();
         glMatrixMode(GL_MODELVIEW);
-        glEnable(GL_LIGHTING);
         glLoadIdentity();
-        float light_pos[] = {0, 0, 0, 1};
-        glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
-        t = glutGet(GLUT_ELAPSED_TIME);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        draw_triangles(triangles, num_elements, false);
+        glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT, depth_data);
+    }
+    void draw() {
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDepthFunc(GL_LEQUAL);
+        draw_triangles(triangles, n, false);
+        label("Rendering after depth pre-pass");
+    }
+};
+
+
+class DepthScene: public BaseScene {
+public:
+    float* depth_data;
+    int w, h;
+    DepthScene(): BaseScene() {
+        w = glutGet(GLUT_WINDOW_WIDTH);
+        h = glutGet(GLUT_WINDOW_HEIGHT);
+        depth_data = (float*)malloc(w*h*sizeof(float));
+    }
+    ~DepthScene() {
+        free(depth_data);
+    }
+    void start() {
+        BaseScene::start();
+    }
+    void get_depth_buffer(int num_elements) {
+        glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            setup_scene_projection();
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        draw_triangles(triangles, num_elements, false);
+        glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT, depth_data);
     }
     void idle() {
-        n = (glutGet(GLUT_ELAPSED_TIME) - t)/60;
-        if (fast) n = 1000;
+        n = (glutGet(GLUT_ELAPSED_TIME) - t)/30;
+        get_depth_buffer(n);
         glutPostRedisplay();
     }
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        draw_scene(-1);
-        glClear(GL_DEPTH_BUFFER_BIT);
-        if (!with_lighting) glDisable(GL_LIGHTING);
-        if (!with_depth) glDisable(GL_DEPTH_TEST);
-        if (!with_smooth) glShadeModel(GL_FLAT);
-        draw_scene(n, true);
-        glEnable(GL_LIGHTING);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glRasterPos2i(-1, -1); // glWindowPos would be nicer, but it requires GLEW and I'm too lazy to link it now
+        glDrawPixels(w, h, GL_LUMINANCE, GL_FLOAT, depth_data);
+        glPushAttrib(GL_CURRENT_BIT);
+        glColor3f(0, 0, 0);
+        glDisable(GL_DEPTH_TEST);
+        label("Filling the Z-buffer");
         glEnable(GL_DEPTH_TEST);
-        glShadeModel(GL_SMOOTH);
+        glPopAttrib();
     }
 };
 
-class FifthScene: public Scene {
-    int t;
+class PainterAlgorithmFailScene: public BaseScene {
+    void start() {
+        BaseScene::start();
+    }
+    void draw() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glDisable(GL_LIGHTING);
+        glLoadIdentity();
+        gluLookAt(0, 0, 3, 0, 0, 0, 0, 1, 0);
+        glRotatef(n, 0, 1, 0);
+        glScalef(0.7, 0.7, 0.7);
+        glBegin(GL_TRIANGLES);
+        glColor3f(1, 0, 0);
+        glVertex3f(-1, 0, 0);
+        glVertex3f(-1, 1, 0);
+        glVertex3f(1, 0.5, 0.5);
+        glColor3f(0, 1, 0);
+        glVertex3f(0, 1, 0);
+        glVertex3f(1, 1, 0);
+        glVertex3f(0.5, -1, 0.5);
+        glColor3f(0, 0, 1);
+        glVertex3f(1, -0.5, 0);
+        glVertex3f(0, -1, 0);
+        glVertex3f(-0.7, 0.7, 0.5);
+        glEnd();
+        glColor3f(1, 1, 1);
+        label("Painter's algorithm can fail");
+    }
+};
+
+bool sort_by_z(const Triangle& first, const Triangle& second) {
+    return first.a.z < second.a.z;
+}
+class PainterAlgorithmScene: public BaseScene {
+    void start() {
+        BaseScene::start();
+        sort(triangles.begin(), triangles.end(), sort_by_z);
+    }
+    void draw() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        draw_triangles(triangles, -1, true);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        draw_triangles(triangles, n, false);
+        label("Painter's algorithm");
+    }
+};
+
+class PolygonFillScene: public BaseScene {
+public:
+    bool with_lighting, with_depth, with_smooth, fast, cull, cull_front;
+    const char* scene_label;
+    PolygonFillScene(const char* scene_label, bool with_lighting = true,
+                     bool with_depth = true, bool with_smooth = false, bool fast = false,
+                     bool cull = false, bool cull_front = false):
+        with_lighting(with_lighting), with_depth(with_depth), with_smooth(with_smooth), fast(fast), scene_label(scene_label),
+        cull(cull), cull_front(cull_front) {
+    }
+    void draw() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        draw_triangles(triangles, -1, true);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        if (!with_lighting) glDisable(GL_LIGHTING);
+        if (!with_depth) glDisable(GL_DEPTH_TEST);
+        if (with_smooth) glShadeModel(GL_SMOOTH);
+        if (cull) glEnable(GL_CULL_FACE);
+        if (cull_front) glCullFace(GL_FRONT);
+        draw_triangles(triangles, fast ? -1 : n, false);
+        glEnable(GL_LIGHTING);
+        glEnable(GL_DEPTH_TEST);
+        glShadeModel(GL_FLAT);
+        glDisable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        label(scene_label);
+    }
+};
+
+class BackFaceCullFailScene: public BaseScene {
+public:
+    void start() {
+        BaseScene::start();
+        triangles.erase(triangles.begin(), triangles.begin()+10);
+    }
+    void draw() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_CULL_FACE);
+        glLoadIdentity();
+        glTranslatef(0, 0, -5);
+        glRotatef(n, 1, 0, 0);
+        glTranslatef(0, 0, 5);
+        draw_triangles(triangles, -1, false);
+        glDisable(GL_CULL_FACE);
+        label("Back-face culling fails on 'open' objects");
+    }
+};
+
+
+class MoveClipSpaceIntoViewScene: public BaseScene {
     vector3f target_pos = vector3f(-10, 3, 3);
     float animation_time = 1; // Seconds
     float progress = 0.0;
@@ -84,24 +260,21 @@ class FifthScene: public Scene {
     double final_matrix[16];
 
     void start() {
+        BaseScene::start();
         // Extract initial complete projection matrix for the whole scene
-        glPushMatrix();
-            glLoadIdentity();
-            gluPerspective(DOF_Y, ASPECT_RATIO, 1, 100);
-            gluLookAt(target_pos.x, target_pos.y, target_pos.z, 0, 0, -2.5, 0, 1, 0);
-            setup_scene_projection_flipped();
-            glGetDoublev(GL_MODELVIEW_MATRIX, initial_matrix);
-        glPopMatrix();
-        // Extract final complete matrix for the whole scene
-        glPushMatrix();
-            glLoadIdentity();
-            setup_scene_projection();
-            glGetDoublev(GL_MODELVIEW_MATRIX, final_matrix);
-        glPopMatrix();
-        glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
+        gluPerspective(DOF_Y, ASPECT_RATIO, 1, 100);
+        gluLookAt(target_pos.x, target_pos.y, target_pos.z, 0, 0, -2.5, 0, 1, 0);
+        setup_scene_projection_flipped();
+        glGetDoublev(GL_MODELVIEW_MATRIX, initial_matrix);
+        // Extract final complete matrix for the whole scene
+        glLoadIdentity();
+        setup_scene_projection();
+        glGetDoublev(GL_MODELVIEW_MATRIX, final_matrix);
+        // Reset projection to identity
+        glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
         glMatrixMode(GL_MODELVIEW);
-        t = glutGet(GLUT_ELAPSED_TIME);
     }
 
     void idle() {
@@ -117,24 +290,15 @@ class FifthScene: public Scene {
         glLoadIdentity();
         interpolated_matrix_v(initial_matrix, final_matrix, progress);
         draw_clip_volume(setup_scene_projection);
-        draw_scene(-1);
+        draw_triangles(triangles, -1, true);
+        label("The XY-view of the clipping space can be directly drawn using 2D rendering");
     }
 };
 
-class FourthScene: public Scene {
-    int t;
+class ProjectionTransformScene: public BaseScene {
     vector3f target_pos = vector3f(-10, 3, 3);
     float animation_time = 1; // Seconds
     float progress = 0.0;
-
-    void start() {
-        glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            gluPerspective(DOF_Y, ASPECT_RATIO, 1, 100);
-        glMatrixMode(GL_MODELVIEW);
-
-        t = glutGet(GLUT_ELAPSED_TIME);
-    }
 
     void idle() {
         progress = glutGet(GLUT_ELAPSED_TIME) - t;
@@ -151,17 +315,13 @@ class FourthScene: public Scene {
         interpolated_matrix((function_t)glLoadIdentity, setup_scene_projection_flipped, progress);
         draw_clip_volume(setup_scene_projection);
         draw_camera();
-        draw_scene(-1);
+        draw_triangles(triangles, -1, true);
+        label("Vertex shading applies model-view and projection matrices, mapping everything into normalized clipping space");
     }
 };
 
-class ThirdScene: public Scene {
-    int t;
+class FrustumScene: public BaseScene {
     vector3f target_pos = vector3f(-10, 3, 3);
-
-    void start() {
-        t = glutGet(GLUT_ELAPSED_TIME);
-    }
 
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -169,12 +329,12 @@ class ThirdScene: public Scene {
         gluLookAt(target_pos.x, target_pos.y, target_pos.z, 0, 0, -2.5, 0, 1, 0);
         draw_clip_volume(setup_scene_projection);
         draw_camera();
-        draw_scene(-1);
+        draw_triangles(triangles, -1, true);
+        label("Projection matrix establishes a view volume");
     }
 };
 
-class SecondScene: public Scene {
-    int t;
+class ModelViewTransformScene: public BaseScene {
     vector3f start_pos = vector3f(0, 0, 0);
     vector3f target_pos = vector3f(-10, 3, 3);
     vector3f cur_pos;
@@ -182,15 +342,10 @@ class SecondScene: public Scene {
     float animation_time = 1; // seconds
 
     void start() {
-        t = glutGet(GLUT_ELAPSED_TIME);
+        BaseScene::start();
         cur_pos = vector3f(0, 0, 0);
         d_pos = target_pos - start_pos;
-        // We must traverse the distance in "animation_time" seconds
-        d_pos = d_pos / animation_time;
-        glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            gluPerspective(DOF_Y, ASPECT_RATIO, 1, 100);
-        glMatrixMode(GL_MODELVIEW);
+        d_pos = d_pos / animation_time; // We must traverse the distance in "animation_time" seconds
     }
 
     void idle() {
@@ -206,30 +361,15 @@ class SecondScene: public Scene {
         glLoadIdentity();
         gluLookAt(cur_pos.x, cur_pos.y, cur_pos.z, 0, 0, -2.5, 0, 1, 0);
         draw_camera();
-        draw_scene(-1);
+        draw_triangles(triangles, -1, true);
+        label("Model-view matrix positions objects in the world and in front of the camera");
     }
 };
 
-class FirstScene: public Scene {
-    int t;
-    int n;
-    void start() {
-        glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            setup_scene_projection();
-        glMatrixMode(GL_MODELVIEW);
-        glEnable(GL_LIGHTING);
-        glLoadIdentity();
-        float light_pos[] = {0, 0, 0, 1};
-        glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
-        t = glutGet(GLUT_ELAPSED_TIME);
-    }
-    void idle() {
-        n = (glutGet(GLUT_ELAPSED_TIME) - t)/20;
-        glutPostRedisplay();
-    }
+class ConstructObjectScene: public BaseScene {
     void draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        draw_scene(n);
+        draw_triangles(triangles, n, true);
+        label("We describe objects using vertices and triangles");
     }
 };

@@ -2,11 +2,14 @@
  * MTAT 03.015 Computer Graphics.
  * Helper illustrations for Lecture 05.
  *
- * Utility functions. Some taken from FreeGLUT.
+ * Utility functions.
  *
  * Copyright 2013, Konstantin Tretyakov.
  */
 #include <GL/freeglut.h>
+#include <vector>
+#define M_PI           3.14159265358979323846
+using std::vector;
 
 // Commenting and organizing code is for the weak!
 
@@ -37,238 +40,18 @@ struct vector3f {
     vector3f operator/ (float f) {
         return vector3f (x / f, y / f, z / f);
     }
+    void apply(float* matrix4x4, float w=1) { // Transform the vector in-place using a homogeneous matrix
+        float result[3];
+        for (int i = 0; i < 3; i++) {
+            result[i] = x*matrix4x4[i] + y*matrix4x4[i+4] + z*matrix4x4[i+8] + w*matrix4x4[i+12];
+        }
+        x = result[0]; y = result[1]; z = result[2];
+    }
     friend ostream& operator<< (ostream& out, vector3f& v) {
         out << "(" << v.x << ", " << v.y << ", " << v.z << ")";
         return out;
     }
 };
-
-// Taken verbatim from FreeGLUT
-static void fghCircleTable(double **sint,double **cost,const int n)
-{
-    int i;
-
-    /* Table size, the sign of n flips the circle direction */
-
-    const int size = abs(n);
-
-    /* Determine the angle between samples */
-
-    const double angle = 2*M_PI/(double)( ( n == 0 ) ? 1 : n );
-
-    /* Allocate memory for n samples, plus duplicate of first entry at the end */
-
-    *sint = (double *) calloc(sizeof(double), size+1);
-    *cost = (double *) calloc(sizeof(double), size+1);
-
-    /* Bail out if memory allocation fails, fgError never returns */
-
-    if (!(*sint) || !(*cost))
-    {
-        free(*sint);
-        free(*cost);
-        //fgError("Failed to allocate memory in fghCircleTable");
-    }
-
-    /* Compute cos and sin around the circle */
-
-    (*sint)[0] = 0.0;
-    (*cost)[0] = 1.0;
-
-    for (i=1; i<size; i++)
-    {
-        (*sint)[i] = sin(angle*i);
-        (*cost)[i] = cos(angle*i);
-    }
-
-    /* Last sample is duplicate of the first */
-
-    (*sint)[size] = (*sint)[0];
-    (*cost)[size] = (*cost)[0];
-}
-
-
-// Taken from FreeGLUT, modified.
-/*
- * Draws a solid sphere
- */
-void FGAPIENTRY glutSolidSphereX(GLdouble radius, GLint slices, GLint stacks, int num_elements)
-{
-    int i,j;
-
-    /* Adjust z and radius as stacks are drawn. */
-
-    double z0,z1;
-    double r0,r1;
-
-    /* Pre-computed circle */
-
-    double *sint1,*cost1;
-    double *sint2,*cost2;
-
-
-    fghCircleTable(&sint1,&cost1,-slices);
-    fghCircleTable(&sint2,&cost2,stacks*2);
-
-    /* The top stack is covered with a triangle fan */
-
-    z0 = 1.0;
-    z1 = cost2[(stacks>0)?1:0];
-    r0 = 0.0;
-    r1 = sint2[(stacks>0)?1:0];
-
-    glBegin(GL_TRIANGLE_FAN);
-
-        glNormal3d(0,0,1);
-        glVertex3d(0,0,radius);
-
-        for (j=slices; j>=0; j--)
-        {
-            if (!num_elements) break;
-            glNormal3d(cost1[j]*r1,        sint1[j]*r1,        z1       );
-            glVertex3d(cost1[j]*r1*radius, sint1[j]*r1*radius, z1*radius);
-            num_elements--;
-        }
-    glEnd();
-
-    /* Cover each stack with a quad strip, except the top and bottom stacks */
-
-    for( i=1; i<stacks-1; i++ )
-    {
-        if (!num_elements) break;
-        z0 = z1; z1 = cost2[i+1];
-        r0 = r1; r1 = sint2[i+1];
-
-        glBegin(GL_QUAD_STRIP);
-
-            for(j=0; j<=slices; j++)
-            {
-                if (!num_elements) break;
-                glNormal3d(cost1[j]*r1,        sint1[j]*r1,        z1       );
-                glVertex3d(cost1[j]*r1*radius, sint1[j]*r1*radius, z1*radius);
-                glNormal3d(cost1[j]*r0,        sint1[j]*r0,        z0       );
-                glVertex3d(cost1[j]*r0*radius, sint1[j]*r0*radius, z0*radius);
-                num_elements--;
-            }
-
-        glEnd();
-    }
-
-    /* The bottom stack is covered with a triangle fan */
-
-    z0 = z1;
-    r0 = r1;
-    glBegin(GL_TRIANGLE_FAN);
-
-        glNormal3d(0,0,-1);
-        glVertex3d(0,0,-radius);
-
-        for (j=0; j<=slices; j++)
-        {
-            if (!num_elements) break;
-            glNormal3d(cost1[j]*r0,        sint1[j]*r0,        z0       );
-            glVertex3d(cost1[j]*r0*radius, sint1[j]*r0*radius, z0*radius);
-            num_elements--;
-        }
-
-    glEnd();
-
-    /* Release sin and cos tables */
-
-    free(sint1);
-    free(cost1);
-    free(sint2);
-    free(cost2);
-}
-
-
-// From FreeGLUT, modified
-/*
- * Draws a solid cylinder
- */
-void FGAPIENTRY glutSolidCylinderX(GLdouble radius, GLdouble height, GLint slices, GLint stacks, int num_elements)
-{
-    int i,j;
-
-    /* Step in z and radius as stacks are drawn. */
-
-    double z0,z1;
-    const double zStep = height / ( ( stacks > 0 ) ? stacks : 1 );
-
-    /* Pre-computed circle */
-
-    double *sint,*cost;
-
-    fghCircleTable(&sint,&cost,-slices);
-
-    /* Cover the base and top */
-
-    glBegin(GL_TRIANGLE_FAN);
-        glNormal3d(0.0, 0.0, -1.0 );
-        glVertex3d(0.0, 0.0,  0.0 );
-        for (j=0; j<=slices; j++) {
-            if (!num_elements) break;
-            glVertex3d(cost[j]*radius, sint[j]*radius, 0.0);
-            num_elements--;
-        }
-    glEnd();
-
-    glBegin(GL_TRIANGLE_FAN);
-        glNormal3d(0.0, 0.0, 1.0   );
-        glVertex3d(0.0, 0.0, height);
-        for (j=slices; j>=0; j--) {
-            if (!num_elements) break;
-            glVertex3d(cost[j]*radius, sint[j]*radius, height);
-            num_elements--;
-        }
-    glEnd();
-
-    /* Do the stacks */
-
-    z0 = 0.0;
-    z1 = zStep;
-
-    for (i=1; i<=stacks; i++)
-    {
-        if (i==stacks)
-            z1 = height;
-
-        glBegin(GL_QUAD_STRIP);
-            for (j=0; j<=slices; j++ )
-            {
-                if (!num_elements) break;
-                glNormal3d(cost[j],        sint[j],        0.0 );
-                glVertex3d(cost[j]*radius, sint[j]*radius, z0  );
-                glVertex3d(cost[j]*radius, sint[j]*radius, z1  );
-                num_elements--;
-            }
-        glEnd();
-
-        z0 = z1; z1 += zStep;
-    }
-
-    /* Release sin and cos tables */
-
-    free(sint);
-    free(cost);
-}
-
-// Draws the scene (in the camera frame)
-void draw_scene(int num_elements, bool filled=false) {
-    if (!filled) glDisable(GL_LIGHTING);
-    if (num_elements < 0) num_elements = 1000;
-    glPushMatrix();
-        gluLookAt(0, -5, 0, 0, 0, 0, 0, 0, 1);
-        if (!filled) glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-        glutSolidSphereX(1, 10, 10, num_elements);
-        glPushMatrix();
-            glTranslatef(0, 0, -1-sqrt(1-0.7*0.7));
-            glutSolidCylinderX(0.7, 1, 20, 3, max(0, num_elements-100));
-        glPopMatrix();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glPopMatrix();
-    glEnable(GL_LIGHTING);
-}
 
 // Draws a "camera" at center of coordinates watching towards negative z.
 void draw_camera() {
@@ -367,3 +150,21 @@ void interpolated_matrix(function_t setup_first_matrix, function_t setup_second_
     interpolated_matrix_v(first, second, slider);
 }
 
+// Draws short string at the upper right corner.
+void draw_label(float x, float y, const char* text) {
+    glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+    glDisable(GL_LIGHTING);
+    glRasterPos2f(x, y);
+    glColor3f(1, 1, 1);
+    glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (const unsigned char*)text);
+    glEnable(GL_LIGHTING);
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+}
