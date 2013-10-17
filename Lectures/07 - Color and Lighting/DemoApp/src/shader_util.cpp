@@ -1,6 +1,5 @@
 /**
  * MTAT.03.015 Computer Graphics.
- * Practice session 5: Vertex shaders
  */
 #include "shader_util.h"
 #include <stdexcept>

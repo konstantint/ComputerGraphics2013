@@ -1,6 +1,6 @@
 /**
  * MTAT.03.015 Computer Graphics.
- * Lecture 5 visualization app.
+ * Lecture 7 visualization app.
  *
  * Copyright 2013, Konstantin Tretyakov
  */

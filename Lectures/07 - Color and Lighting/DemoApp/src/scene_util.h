@@ -1,6 +1,6 @@
 /**
  * MTAT 03.015 Computer Graphics.
- * Helper illustrations for Lecture 05.
+ * Helper illustrations for Lecture 7.
  *
  * Utility functions.
  *
