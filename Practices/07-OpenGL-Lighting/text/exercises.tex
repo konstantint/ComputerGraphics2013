@@ -130,7 +130,7 @@ Comment out the line \verb#per_vertex_lighting.use();# that you used in the prev
 \end{lstlisting}
 This will enable the use of the shader programs \verb#lighting2_vertex.glsl# and \verb#lighting2_fragment.glsl#. Your task is to modify the code in the fragment shader to implement the same lighting logic as before (but now applied to each fragment). 
 
-In the end, add the code line that performs gamma correction for the computed color. Recall that gamma correction means transforming the color from linear RGB colorspace to non-linear sRGB colorspace (used on the display) via the transformation:
+In the end, add the code line that performs gamma correction for the computed color\footnote{Switch off the \texttt{GL\textunderscore FRAMEBUFFER\textunderscore SRGB} extension, if you used it before}. Recall that gamma correction means transforming the color from linear RGB colorspace to non-linear sRGB colorspace (used on the display) via the transformation:
 $$
 \text{color}_\text{sRGB} := \left(\text{color}_\text{RGB}\right)^\frac{1}{2.2}
 $$
