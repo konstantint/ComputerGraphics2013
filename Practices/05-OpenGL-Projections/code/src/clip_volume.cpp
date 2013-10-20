@@ -73,6 +73,7 @@ int main(int argc, char* argv[]) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glEnable(GL_LINE_SMOOTH);   // Line antialiasing
     glEnable(GL_POLYGON_SMOOTH);// Polygon antialiasing
     glEnable(GL_BLEND);         // Antialiasing works only with blending enabled
