@@ -34,8 +34,15 @@
 			<Add library="glew32" />
 			<Add directory="lib" />
 		</Linker>
+		<Unit filename="src/lighting.cpp" />
+		<Unit filename="src/lighting1_fragment.glsl" />
+		<Unit filename="src/lighting1_vertex.glsl" />
+		<Unit filename="src/lighting2_fragment.glsl" />
+		<Unit filename="src/lighting2_vertex.glsl" />
 		<Unit filename="src/primitives.h" />
 		<Unit filename="src/random_surface.h" />
+		<Unit filename="src/shader_util.cpp" />
+		<Unit filename="src/shader_util.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
