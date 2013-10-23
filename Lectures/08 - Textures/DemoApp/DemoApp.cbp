@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="DemoApp" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin/DemoApp" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
+				<Option object_output="obj" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="include" />
+		</Compiler>
+		<Linker>
+			<Add library="freeglut" />
+			<Add library="opengl32" />
+			<Add library="glu32" />
+			<Add library="winmm" />
+			<Add library="gdi32" />
+			<Add library="glew32" />
+			<Add directory="lib" />
+		</Linker>
+		<Unit filename="src/ambientdiffuse_vertex_shader.glsl" />
+		<Unit filename="src/base_fragment_shader.glsl" />
+		<Unit filename="src/blinn_fragment_shader_hdr.glsl" />
+		<Unit filename="src/diffuse_vertex_shader.glsl" />
+		<Unit filename="src/glu_invert_matrix.cpp" />
+		<Unit filename="src/glu_invert_matrix.h" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/phong_fragment_shader.glsl" />
+		<Unit filename="src/phong_fragment_shader_gc.glsl" />
+		<Unit filename="src/phong_fragment_shader_hdr.glsl" />
+		<Unit filename="src/phong_vertex_shader.glsl" />
+		<Unit filename="src/scene_util.h" />
+		<Unit filename="src/scenes.h" />
+		<Unit filename="src/shader_util.cpp" />
+		<Unit filename="src/shader_util.h" />
+		<Unit filename="src/triangles.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
