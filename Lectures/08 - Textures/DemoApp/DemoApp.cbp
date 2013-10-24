@@ -34,22 +34,15 @@
 			<Add library="glew32" />
 			<Add directory="lib" />
 		</Linker>
-		<Unit filename="src/ambientdiffuse_vertex_shader.glsl" />
 		<Unit filename="src/base_fragment_shader.glsl" />
-		<Unit filename="src/blinn_fragment_shader_hdr.glsl" />
-		<Unit filename="src/diffuse_vertex_shader.glsl" />
-		<Unit filename="src/glu_invert_matrix.cpp" />
-		<Unit filename="src/glu_invert_matrix.h" />
+		<Unit filename="src/base_vertex_shader.glsl" />
 		<Unit filename="src/main.cpp" />
-		<Unit filename="src/phong_fragment_shader.glsl" />
-		<Unit filename="src/phong_fragment_shader_gc.glsl" />
-		<Unit filename="src/phong_fragment_shader_hdr.glsl" />
-		<Unit filename="src/phong_vertex_shader.glsl" />
 		<Unit filename="src/scene_util.h" />
 		<Unit filename="src/scenes.h" />
 		<Unit filename="src/shader_util.cpp" />
 		<Unit filename="src/shader_util.h" />
-		<Unit filename="src/triangles.h" />
+		<Unit filename="src/tex_fragment_shader.glsl" />
+		<Unit filename="src/tex_vertex_shader.glsl" />
 		<Extensions>
 			<code_completion />
 			<envvars />
