@@ -18,7 +18,7 @@ std::string get_file_contents(const char *filename) {
     std::ifstream in(filename, std::ios::in | std::ios::binary);
     if (in) return std::string((std::istreambuf_iterator<char>(in)),
                                 std::istreambuf_iterator<char>());
-    else throw(errno);
+    else throw(std::runtime_error(std::string("Failed to read file ") + filename));
 }
 
 /**
@@ -91,9 +91,9 @@ void shader_prog::uniform1f(const char* name, float f) {
     GLint loc = glGetUniformLocation(prog, name);
     glUniform1f(loc, f);
 }
-void shader_prog::uniform1i(const char* name, int f) {
+void shader_prog::uniform1i(const char* name, int i) {
     GLint loc = glGetUniformLocation(prog, name);
-    glUniform1i(loc, f);
+    glUniform1i(loc, i);
 }
 void shader_prog::uniform3f(const char* name, float x, float y, float z) {
     GLint loc = glGetUniformLocation(prog, name);

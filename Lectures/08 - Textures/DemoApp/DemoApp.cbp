@@ -36,6 +36,18 @@
 		</Linker>
 		<Unit filename="src/base_fragment_shader.glsl" />
 		<Unit filename="src/base_vertex_shader.glsl" />
+		<Unit filename="src/glimg/ImageCreator.cpp" />
+		<Unit filename="src/glimg/ImageFormat.cpp" />
+		<Unit filename="src/glimg/ImageSet.cpp" />
+		<Unit filename="src/glimg/ImageSetImpl.cpp" />
+		<Unit filename="src/glimg/ImageSetImpl.h" />
+		<Unit filename="src/glimg/StbLoader.cpp" />
+		<Unit filename="src/glimg/Util.cpp" />
+		<Unit filename="src/glimg/Util.h" />
+		<Unit filename="src/glimg/stb_image.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/glimg/stb_image.h" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/scene_util.h" />
 		<Unit filename="src/scenes.h" />

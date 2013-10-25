@@ -22,6 +22,6 @@ public:
 
     // Shorthands for glUniform specification
     void uniform1f(const char* name, float f);
-    void uniform1i(const char* name, int f);
+    void uniform1i(const char* name, int i);
     void uniform3f(const char* name, float x, float y, float z);
 };
