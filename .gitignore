@@ -13,6 +13,10 @@
 *.out
 *.synctex.gz
 
+# Thumbs.db
+Thumbs.db
+
 # Executables
 *.exe
 !Lectures/06 - Hidden Surface Removal/DemoApp/bin/DemoApp.exe
+!Lectures/08 - Textures/DemoApp/bin/DemoApp.exe
