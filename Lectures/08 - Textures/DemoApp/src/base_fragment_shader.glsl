@@ -3,7 +3,9 @@
 smooth in vec4 glVertex;
 smooth in vec4 position;
 smooth in vec3 normal;
+smooth in vec4 color;
 uniform int mode;
+uniform int disable_lighting;
 
 // ------------------------------ //
 // Noise function taken from
@@ -175,6 +177,10 @@ float pnoise(vec3 P, vec3 rep)
 // ---------------------------------- //
 
 void main(void) {
+    if (disable_lighting == 1) {
+        gl_FragColor = color;
+        return;
+    }
     vec4 light_dir = gl_LightSource[0].position - position;
     float d = length(light_dir);
     vec3 l = normalize(light_dir.xyz);
@@ -193,9 +199,9 @@ void main(void) {
     vec3 h = normalize((v+l)/2.0);
 
     vec4 c = gl_LightModel.ambient * gl_FrontMaterial.ambient;
-    c += gl_LightSource[0].diffuse*gl_FrontMaterial.diffuse*dot(l, n);
+    c += gl_LightSource[0].diffuse*gl_FrontMaterial.diffuse*dot(l, n)/(gl_LightSource[0].constantAttenuation + d*gl_LightSource[0].linearAttenuation + d*d*gl_LightSource[0].quadraticAttenuation);
 
-    float specular_phong = pow(max(dot(v,r), 0.0), 25.0);
+    float specular_phong = pow(max(dot(v,r), 0.0), gl_FrontMaterial.shininess);
     float specular_blinn = pow(max(dot(h,n), 0.0), 40.0);
     float specular_gauss = acos(dot(h,n));
     specular_gauss *= 7;
@@ -222,4 +228,5 @@ void main(void) {
     c = clamp(c, 0, 1);
     c = pow(c, vec4(1/2.2));
     gl_FragColor = vec4(c.xyz, 1);
+    return;
 }

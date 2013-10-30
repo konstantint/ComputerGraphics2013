@@ -80,6 +80,7 @@ int main(int argc, char* argv[]) {
     scenes.push(new TextureCheckerboardScene(GAMMA_CORRECT, "Anisotropic mipmaps + Gamma correction"));
     scenes.push(new TorusScene(7, "Bump-mapping"));
     scenes.push(new SphereMapScene());
+    scenes.push(new ShadowScene());
 
     scenes.current()->start();
 

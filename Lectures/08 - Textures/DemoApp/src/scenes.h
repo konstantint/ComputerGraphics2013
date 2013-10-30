@@ -93,6 +93,139 @@ class EmptyScene: public Scene {
 };
 
 
+class ShadowScene: public Scene {
+public:
+    GLuint theTexture;
+    shader_prog shader = shader_prog("../src/base_vertex_shader.glsl", "../src/base_fragment_shader.glsl");
+    void start() {
+        shader.use();
+        shader.uniform1i("mode", 0);
+        glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluPerspective(DOF_Y, ASPECT_RATIO, 0.5, 100);
+            gluLookAt(0, -10, 5, 0, 0, 1, 0, 0, 1);
+        glMatrixMode(GL_MODELVIEW);
+        glClearColor(0, 0, 0, 0);
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        float ambient[] = {0.2, 0.2, 0.2, 1.0};
+        float zero[] = {0.0, 0.0, 0.0, 0.0};
+        float white[] = {1.0, 1.0, 1.0, 1.0};
+        float light[] = {10.0, 10.0, 10.0, 1.0};
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+        glLightfv(GL_LIGHT0, GL_AMBIENT, zero);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, light);
+        glLightfv(GL_LIGHT0, GL_SPECULAR, light);
+        glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.0);
+        glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 2.0);
+        glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, white);
+        glMaterialf(GL_FRONT, GL_SHININESS, 30);
+    }
+
+    void draw() {
+        float t = glutGet(GLUT_ELAPSED_TIME);
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+        glLoadIdentity();
+        float light_pos[] = {3*sin(t*0.002), 3*cos(t*0.002), 5, 1.0};
+        glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+
+        glPushMatrix();
+            glTranslatef(3*sin(t*0.002), 3*cos(t*0.002), 5);
+            shader.uniform1i("disable_lighting", 1);
+            glColor3f(1, 1, 0);
+            glutSolidSphere(0.1, 10, 10);
+            shader.uniform1i("disable_lighting", 0);
+        glPopMatrix();
+
+        // White floor
+        float floorWhite[] = {0.5, 0.6, 0.5, 1.0};
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, floorWhite);
+        glPushMatrix();
+        glScalef(10, 10, 10);
+        glBegin(GL_QUADS);
+            glNormal3f(0, 0, 1);
+            glVertex2f(-1, -1);
+            glVertex2f(-1, 1);
+            glVertex2f(1, 1);
+            glVertex2f(1, -1);
+        glEnd();
+        glPopMatrix();
+
+        // Yellow walls
+        float yellow[] = {0.8, 0.8, 0.1, 1.0};
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, yellow);
+        glPushMatrix();
+        glTranslatef(3.5, 0, 0);
+        glRotatef(-90, 0, 1, 0);
+        glScalef(10, 10, 10);
+        glBegin(GL_QUADS);
+            glNormal3f(0, 0, 1);
+            glVertex2f(-1, -1);
+            glVertex2f(-1, 1);
+            glVertex2f(1, 1);
+            glVertex2f(1, -1);
+        glEnd();
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(0, 3.5, 0);
+        glRotatef(90, 1, 0, 0);
+        glScalef(10, 10, 10);
+        glBegin(GL_QUADS);
+            glNormal3f(0, 0, 1);
+            glVertex2f(-1, -1);
+            glVertex2f(-1, 1);
+            glVertex2f(1, 1);
+            glVertex2f(1, -1);
+        glEnd();
+        glPopMatrix();
+
+        // Pink teapot
+        glPushMatrix();
+            glTranslatef(0, 0, 2);
+            glRotatef(t*0.01, 1, 1, 1);
+            glRotatef(90, 1, 0, 0);
+            float pink[] = {0.5, 0.1, 0.3, 1.0};
+            glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, pink);
+            glutSolidTeapot(1);
+        glPopMatrix();
+
+        // Teapot shadows
+        glColor4f(0.2, 0.2, 0.2, 1);
+        shader.uniform1i("disable_lighting", 1);
+        glPushMatrix();
+            float ground[] = {0, 0, 1, 0};
+            glTranslatef(0, 0, 0.001);
+            shadowMatrix(ground, light_pos);
+            glTranslatef(0, 0, 2);
+            glRotatef(t*0.01, 1, 1, 1);
+            glRotatef(90, 1, 0, 0);
+            glutSolidTeapot(1);
+        glPopMatrix();
+        glPushMatrix();
+            float wall1[] = {-1, 0, 0, 3.5};
+            glTranslatef(-0.001, 0, 0);
+            shadowMatrix(wall1, light_pos);
+            glTranslatef(0, 0, 2);
+            glRotatef(t*0.01, 1, 1, 1);
+            glRotatef(90, 1, 0, 0);
+            glutSolidTeapot(1);
+        glPopMatrix();
+        glPushMatrix();
+            float wall2[] = {0, -1, 0, 3.5};
+            glTranslatef(0, -0.001, 0);
+            shadowMatrix(wall2, light_pos);
+            glTranslatef(0, 0, 2);
+            glRotatef(t*0.01, 1, 1, 1);
+            glRotatef(90, 1, 0, 0);
+            glutSolidTeapot(1);
+        glPopMatrix();
+        shader.uniform1i("disable_lighting", 0);
+    }
+};
+
+
 class SphereMapScene: public Scene {
 public:
     GLuint theTexture;
