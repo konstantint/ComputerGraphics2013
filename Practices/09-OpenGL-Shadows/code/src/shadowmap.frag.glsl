@@ -53,7 +53,9 @@ void main(void) {
         //     frustum. (NB: Don't forget perspective division!)
         //   * Rescale the resulting ("clip-space") x, y, z coordinates from the range [-1, 1], to the
         //     texture-space range [0, 1]. (Note that the z will then become "depth" as in the depth buffer).
-        //   * Find out the depth value that was rendered in the corresponding texture for the current location
+        //   * If the (x, y) coordinates are outside of the range [0, 1], the pixel is not in the light source's view frustum,
+        //     then the pixel is in shadow (or, alternatively, you might want to hardcode the pixel to be lit in this case).
+        //   * Otherwise, find out the depth value that was rendered in the corresponding texture for the current location
         //   * Compare the "current pixel" and "texture" depths, and if the pixel's depth value is smaller or equal to
         //     the one in the texture, consider pixel to be lit by the corresponding light source.
         //

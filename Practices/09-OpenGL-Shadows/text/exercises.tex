@@ -110,7 +110,7 @@ Finally, probably the most popular way of implementing real-time shadows nowaday
 \begin{exercise}{4}{2}
 Open the project \verb#3_ShadowMaps# and study the\\ \verb#shadow_maps.cpp# file (in particular the \verb#display# function). The core shadow mapping algorithm logic is already implemented there. Your task is to complete the implementation by providing the appropriate fragment shader code in \verb#shadowmap.frag.glsl#. The comments in the fragment shader will hopefully provide enough guidance. 
 
-Note that due to the logic of the algorithm your light sources will act as a kind of ``square'' directional lights. You should aim to get a result like the following:
+Note that the shadow map texture only applies to fragments that fit into the view frustum of the corresponding light source. Everything outside that frustum has to be assumed to be either constantly lit, or be constantly in shadow, depending on your preference. In the former case shadows simply won't work outside of the view frustum. In the latter case the light sources will resemble a kind of ``square'' directional lights, and you would get a result like the following:
 
 \begin{center}
 \includegraphics[width=0.7\textwidth]{shadow_maps.png}
