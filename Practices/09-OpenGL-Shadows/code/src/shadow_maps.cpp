@@ -205,9 +205,8 @@ void render_scene_depth_buffer_to_texture(GLuint textureHandle, vector<Cube>& ob
     int h = glutGet(GLUT_WINDOW_HEIGHT);
 
     float* depth_data = (float*)malloc(w*h*sizeof(float)); // Initialize array for depth data
-    shader.uniform1i("no_lighting", 1);                    // Turn off lighting and shadow maps
+    shader.uniform1i("no_lighting", 1);                    // Turn off lighting in the shader
 
-    glClear(GL_DEPTH_BUFFER_BIT);                           // Clear the depth buffer
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);    // Disable writing to screen
     draw_walls();                                           // Render the scene
     for (int i = 0; i < objects.size(); i++) {
@@ -218,7 +217,8 @@ void render_scene_depth_buffer_to_texture(GLuint textureHandle, vector<Cube>& ob
 
     // Note: what we are doing here is not the most efficient way to do it.
     // In fact, in modern OpenGL you would rather render directly to the texture by creading a separate framebuffer object.
-    // (see e.g. http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/)
+    // (see e.g. http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/ and
+    // https://developer.nvidia.com/sites/default/files/akamai/gamedev/docs/opengl_rendertexture.pdf)
     // However, this might not work on some older machines (and it requires the introduction of a bunch of
     // OpenGL-specific commands, that are not in principle the topic of this practice session nor this course per se).
 
@@ -229,10 +229,10 @@ void render_scene_depth_buffer_to_texture(GLuint textureHandle, vector<Cube>& ob
     // NB: If you want to debug such code, the following line flushes the depth array to the screen
     //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE); glDrawPixels(w, h, GL_LUMINANCE, GL_FLOAT, depth_data);
 
-    free(depth_data);
+    free(depth_data);   // Release memory
 
-    // Switch writing to screen back on, clear depth buffer we messed up, and enable lighting
+    // Switch writing to screen back on, clear the depth buffer that we messed up
     glClear(GL_DEPTH_BUFFER_BIT);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    shader.uniform1i("no_lighting", 0);
+    shader.uniform1i("no_lighting", 0); // Enable lighting again
 }
