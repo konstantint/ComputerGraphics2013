@@ -10,8 +10,8 @@ uniform int no_lighting;       // Tells the shader to return gl_Color rather tha
 
 uniform mat4 shadowMapMatrix[2]; // Shadow map view-projection transforms for each of the two light sources
 
-uniform sampler2D shadowMapTexture0; // Unfortunately, only starting from GLSL 4.00 is becomes possible
-uniform sampler2D shadowMapTexture1; // (GLSL 1.3 allows to declare an array, but it is impossible to loop over it, so it's of no use)
+uniform sampler2D shadowMapTexture0; // In case you were wondering: no, it is not possible to have an array of samplers.
+uniform sampler2D shadowMapTexture1; // To be more precise, starting from GLSL 1.3 you *can* have an array, but you may not iterate over it. Iteration is possible only starting with GLSL 4.0.
 
 // Gamma encoding
 vec4 srgb(vec4 color) {
@@ -51,13 +51,13 @@ void main(void) {
         // * For each light source:
         //   * Compute the coordinates of vertexPos with respect to the light source's projective
         //     frustum. (NB: Don't forget perspective division!)
-        //   * Map the resulting ("clip-space") z coordinate to a depth value
-        //     by rescaling from [-1, 1] to [0, 1].
-        //   * Find out the depth value that was rendered in the corresponding texture for the same location
-        //   * Compare the two, and if the pixel's depth value is equal to (or just slightly greater) than
-        //     the one in the texture, consider light source to be affecting that pixel position.
+        //   * Rescale the resulting ("clip-space") x, y, z coordinates from the range [-1, 1], to the
+        //     texture-space range [0, 1]. (Note that the z will then become "depth" as in the depth buffer).
+        //   * Find out the depth value that was rendered in the corresponding texture for the current location
+        //   * Compare the "current pixel" and "texture" depths, and if the pixel's depth value is smaller or equal to
+        //     the one in the texture, consider pixel to be lit by the corresponding light source.
         //
-        // Hint: Despite the lingering description, the overall number of lines of code you need to add here is around 6-10.
+        // Hint: Despite the lingering description, the overall number of lines of code you need to add here is around 5-10.
 
         // So far we just do the usual lighting computation.
         for (int i = 0; i < 2; i++) c += blinn(gl_LightSource[i]);
