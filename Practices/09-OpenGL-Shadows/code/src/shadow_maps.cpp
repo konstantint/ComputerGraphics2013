@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
     // ---------- Do per-fragment lighting ----------
     shader.use();
 
-    // Create depth textures, configure and bind them to the sampler objects in the shader
+    // Create shadow map textures, configure and bind them to the sampler objects in the shader
     glGenTextures(2, shadowMapTextures);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, shadowMapTextures[0]);
@@ -108,11 +108,9 @@ void keyboard(unsigned char key, int x, int y) {
  * Exercise 4. Shadow maps
  */
 void display() {
+    float t = glutGet(GLUT_ELAPSED_TIME)*0.001;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    float t = glutGet(GLUT_ELAPSED_TIME)*0.001;
-    float w = glutGet(GLUT_WINDOW_WIDTH);
-    float h = glutGet(GLUT_WINDOW_HEIGHT);
 
     // --------------------------------------------------------
     // Prepare positions of two light sources and two "Cube" objects
@@ -139,6 +137,7 @@ void display() {
 
     // Now that the shadow map textures are prepared, render the scene.
     // The shader is responsible for making appropriate use of the shadow textures.
+    // Exercise: Fix the shader.
     set_viewer_projection();
     draw_walls();
     for (int i = 0; i < objects.size(); i++) objects[i].draw();
