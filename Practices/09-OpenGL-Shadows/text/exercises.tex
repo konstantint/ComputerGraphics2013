@@ -125,7 +125,7 @@ It stems from having code like the following somewhere in your shader:
  if (current_depth_value <= texture_depth_value)
      c += blinn(gl_LightSource[i]); // The fragment is lit
 \end{verbatim}
-The artifact is caused by insufficient precision of the depth buffer. Whenever the surfaces are lit, the values of \verb#current_depth_value# and \verb#texture_depth_value# should in principle be strictly equal. However, due to the limited precision of floating point values, the equality is rarely exact: for some pixels one value is slightly greater, for other slightly less, which leads to the observed effects.
+The artifact is due to limited number of samples in the depth texture and floating point discrepancies. Whenever the surfaces are lit, the values of \verb#current_# \verb#depth_value# and \verb#texture_depth_value# should, ideally, be strictly equal. However, due to the fact that \verb#texture_depth_value# is usually obtained via some kind of bilinear interpolation from the texture and \verb#current_depth_value# is computed through matrix multiplication, floating point discrepancies creep in and the equality is rarely exact: for some pixels one value is slightly greater, for other slightly less, which leads to the observed effects.
 
 The fix is simple: add a small offset to the pixel's depth.
 \begin{verbatim}
@@ -136,22 +136,23 @@ The fix is simple: add a small offset to the pixel's depth.
 When the offset is too large, however, gaps will start to appear between the objects and their shadows, and you don't want this to happen either.
 \end{exercise}
 
-Coming up with a solution to this exercise is a good indicator that you have mastered the basic concepts behind the standard graphics pipeline.
-
 \begin{exercise}{5*}{0.5}
 For even nicer shadow mapping, it is possible to use GPU-s built-in capabilities for working with shadow maps. This will result in both cleaner code and better texture sampling, somewhat reducing aliasing artifacts. Try doing it:
 \begin{enumerate}
 \item Change the type of \texttt{shadowMapTexture}$k$ variables from \texttt{sampler2D} to \texttt{sampler2DShadow}.
-\item Now, rather than accessing them as textures via the \texttt{texture2D} function, you will need to use the \texttt{shadow2D} function, which takes as input the shadow map texture and a three-dimensional point. It performs the shadow test (using $(x, y)$ to look up the depth value in the texture and $z$ to compare against), and returns nonzero value(s) if the shadow test passes, i.e. the corresponding point is not in shadow.
-\item Next, there is also a \texttt{shadow2DProj} function, which directly accepts four-dimensional homogeneous coordinates (so that you do not need to perform perspective division). You cannot immediately feed clip-space coordinates to it, however. As all other texture access functions, it expects coordinates scaled to texture-space range, i.e. $x, y, z$ must be in range $[0, 1]$ rather than $[-1, 1]$. The rescaling from clip-space homogeneous coordinates into the texture-space range can be done using the matrix
+\item Now, rather than accessing them as textures via the \texttt{texture2D} function, you will need to use the \texttt{shadow2D} function, which takes as input the shadow map texture and a three-dimensional point. It performs the whole shadow test (using $(x, y)$ to look up the depth value in the texture and $z$ to compare against), and returns nonzero value(s) if the shadow test passes, i.e. the corresponding point is not in shadow. You should not even need to worry about offsets and shadow acne\footnote{As long as you specify \texttt{GL\textunderscore LINEAR} filtering mode for your textures, at least}.
+\item Moreover, there is also a \texttt{shadow2DProj} texture access function, which directly accepts four-dimensional homogeneous coordinates (so that you do not need to perform perspective division). You cannot immediately feed clip-space coordinates to it, however. As all other texture access functions, it expects coordinates scaled to texture-space range, i.e. $x, y, z$ must be in range $[0, 1]$ rather than $[-1, 1]$. The rescaling from clip-space homogeneous coordinates into the texture-space range can be done using the matrix
 $$
 \left(\begin{matrix}0.5 & 0 & 0 & 0.5\\
 0 & 0.5 & 0 & 0.5 \\
 0 & 0 & 0.5 & 0.5 \\
 0 & 0& 0& 1\end{matrix}\right)
 $$
-\item Finally, the fact that we are performing the whole computation in the fragment shader is inefficient. Instead we should compute the light-source-frame coordinates for each vertex in the vertex shader and simply use the interpolated values in the frament shaders\footnote{Notice that this means you will be doing a perspective-correct interpolation with respect to a perpective projection, that is \emph{different} from the one used to render the scene. Think how this is only possible due to homogeneous coordinates.}
+\item Finally, performing the whole computation in the fragment shader is inefficient. Instead, we should compute the shadow map coordinates for each vertex in the vertex shader and simply use the interpolated values in the frament shaders\footnote{Notice that this means you will be doing a perspective-correct interpolation with respect to a perpective projection, that is \emph{different} from the one used to render the scene. Think how this is only possible due to homogeneous coordinates.}
 \end{enumerate}
 To get points for this problem implement the changes suggested above. Make use of the \texttt{shadow2DProj} function and perform all shadow coordinate computations (i.e. the corresponding matrix multiplications) in the vertex shader\footnote{At this point it becomes possible to make the code added to the fragment shader be a ``one-liner'' of the form \texttt{for(something) if (long condition) c += blinn(gl\textunderscore LightSource[i]);} The condition is the shadow map test.}.
 \end{exercise}
+
+Being able to understand and implement shadow maps is generally a good indicator that you have mastered the core concepts behind the standard graphics pipeline.
+
 \end{document}
