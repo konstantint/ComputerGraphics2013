@@ -137,19 +137,24 @@ The result could look as follows:
 \begin{exercise}{2}{1}
 Add a second scene\footnote{There is a \texttt{current\textunderscore scene\textunderscore id} variable that changes its value when the \emph{Space} or \emph{Return} key is pressed. Use an \texttt{if (current\textunderscore scene\textunderscore id == ..)} condition in the \texttt{display} function.} to the project, that would render a simple rotating cube with colored faces. For that:
 \begin{enumerate}
-\item Create a second vertex array object with its own vertex coordinates and colors, appropriate for the cube. Ensure that each face has its own solid color (for that you will need to repeat vertices).
+\item Create a second vertex array object with its own vertex coordinates and colors, appropriate for the cube. Ensure that each face has its own solid color (for that you will need to repeat vertices, i.e. you will have a total of 24 vertices in the array).
+\item You will need to modify the first vertex array and the shader to use three-dimensional vertices (rather than two-dimensional).
 \item In the \texttt{display} function you will have to select which vertex array to use by calling \texttt{glBindVertexArray} with the appropriate handle.
 \item Do not forget to use perspective projection (\texttt{MatrixStack::Perspective}) and set an appropriate view transform. As you have no lighting computations, you do not need to keep separate matrices for model-view and projection -- the existing \texttt{modelViewProjectiomMatrix} uniform variable will suffice.
-\item Finally, use the \verb#glDrawElements# (rather than \texttt{glDrawArrays}) to render the faces of the cube.
+\item Finally, use 6 calls to \verb#glDrawArrays# -- one for each face. You will need to use either \verb#GL_TRIANGLE_FAN# or \verb#GL_TRIANGLE_STRIP# primitive type, depending on which order you listed the vertices for each face.
 \end{enumerate}
 \end{exercise}
 
+\begin{exercise}{3*}{0.5}
+Modify the last exercise to use a single call to \verb#glDrawElements# rather than six calls to \verb#glDrawArrays#. For that you will need to create another buffer object, bind it to the \verb#GL_ELEMENT_ARRAY_BUFFER# target, and fill with a sequence of integers. Read this\footnote{\url{http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/}} for explanations.
+\end{exercise}
+
 \section{WebGL}
-\begin{exercise}{3*}{1.5}
+\begin{exercise}{4*}{1.5}
 WebGL is an OpenGL specification tuned for the Web browser. In spirit it is quite close to OpenGL 3.1, so it is not too hard to port the code you just wrote to WebGL (only the matrix library and the shader utility class may significantly differ). Study an introductory WebGL tutorial\footnote{\url{http://learningwebgl.com/blog/?p=28} should be enough, but you are welcome to google for more}, and port any of the two scenes you just implemented (or both, if you wish) to run in the browser.
 \end{exercise}
 
-\begin{exercise}{4*}{0.5}
+\begin{exercise}{5*}{0.5}
 Implement a rotating colored cube scene in the browser using the Three.js\footnote{\url{http://threejs.org/}} library.
 \end{exercise}
 
