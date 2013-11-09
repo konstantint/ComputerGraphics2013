@@ -157,7 +157,7 @@ void display() {
     m.Rotate(glm::vec3(0, 0, 1), t*0.01);
     // Assign the current matrix to a variable in the shader
     // the .Top() method returns the top of the stack.
-    shader.uniformMatrix4fv("modelViewMatrix", glm::value_ptr(m.Top()));
+    shader.uniformMatrix4fv("modelViewProjectionMatrix", glm::value_ptr(m.Top()));
 
     // Now basically emit a glBegin(GL_TRIANGLES),
     // followed by three glVertex calls, corresponding to vertex array object elements 0, 1, 2.

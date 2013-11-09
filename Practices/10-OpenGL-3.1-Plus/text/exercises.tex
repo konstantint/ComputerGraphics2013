@@ -139,7 +139,7 @@ Add a second scene\footnote{There is a \texttt{current\textunderscore scene\text
 \begin{enumerate}
 \item Create a second vertex array object with its own vertex coordinates and colors, appropriate for the cube. Ensure that each face has its own solid color (for that you will need to repeat vertices).
 \item In the \texttt{display} function you will have to select which vertex array to use by calling \texttt{glBindVertexArray} with the appropriate handle.
-\item Do not forget to use perspective projection (\texttt{MatrixStack::Perspective}) to set an appropriate view transform.
+\item Do not forget to use perspective projection (\texttt{MatrixStack::Perspective}) and set an appropriate view transform. As you have no lighting computations, you do not need to keep separate matrices for model-view and projection -- the existing \texttt{modelViewProjectiomMatrix} uniform variable will suffice.
 \item Finally, use the \verb#glDrawElements# (rather than \texttt{glDrawArrays}) to render the faces of the cube.
 \end{enumerate}
 \end{exercise}
