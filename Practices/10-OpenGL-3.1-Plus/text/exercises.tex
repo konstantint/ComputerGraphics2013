@@ -149,13 +149,25 @@ Add a second scene\footnote{There is a \texttt{current\textunderscore scene\text
 Modify the last exercise to use a single call to \verb#glDrawElements# rather than six calls to \verb#glDrawArrays#. For that you will need to create another buffer object, bind it to the \verb#GL_ELEMENT_ARRAY_BUFFER# target, and fill with a sequence of integers. Read this\footnote{\url{http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/}} for explanations.
 \end{exercise}
 
-\section{WebGL}
+\section{WebGL and OpenGL ES*}
 \begin{exercise}{4*}{1.5}
 WebGL is an OpenGL specification tuned for the Web browser. In spirit it is quite close to OpenGL 3.1, so it is not too hard to port the code you just wrote to WebGL (only the matrix library and the shader utility class may significantly differ). Study an introductory WebGL tutorial\footnote{\url{http://learningwebgl.com/blog/?p=28} should be enough, but you are welcome to google for more}, and port any of the two scenes you just implemented (or both, if you wish) to run in the browser.
 \end{exercise}
 
 \begin{exercise}{5*}{0.5}
 Implement a rotating colored cube scene in the browser using the Three.js\footnote{\url{http://threejs.org/}} library.
+\end{exercise}
+
+\begin{exercise}{6* [Deadline: December 1]}{1.0}
+Port the two-scene application from Exercise 2 to run on Android. Android phones run a version of OpenGL API called OpenGL ES. Like WebGL, OpenGL ES (at least starting from version 2.0) largely follows the OpenGL 3.1+ specification.
+
+You can attempt this task in two ways. The first and the most obvious approach is to use the native Android development tools and port the code to Java\footnote{\url{http://developer.android.com/guide/topics/graphics/opengl.html}}.
+
+Another approach is to use the fact that the bleeding-edge version of FreeGLUT lets you compile GLUT applications directly for Android. The steps necessary to compile for Android are described on the FreeGLUT website\footnote{\url{http://freeglut.sourceforge.net/docs/android.php}}. There is also a sample project in the FreeGLUT source code in the SVN repository (NB: it is \emph{not} present in the zipped archive you can download from the website, you must checkout from SVN). 
+
+The deadline for this exercise is December 1. Note: it only makes sense to attempt this task if you have some experience with Android development, or are comfortable with following cross-compilation instructions like those given on the FreeGLUT website, debugging the issues that come up on the way. The point count for this task is 1 not because it is necessarily ``easy''\footnote{It is not technically hard, but it can be very time-consuming if you manage to stumble into an unexpected debugging hole.}, but simply because the skills and equipment it requires are not a prerequisite for this course.
+
+If you are an Apple or a Windows phone user, you are welcome to try porting the application to your device instead. However, I won't be able to consult you much if you get into problems on those platforms. In this case, in addition to submitting the project code you should also demonstrate in person that the project works on your device.
 \end{exercise}
 
 \end{document}
