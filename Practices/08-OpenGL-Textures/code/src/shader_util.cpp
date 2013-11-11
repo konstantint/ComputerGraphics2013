@@ -9,6 +9,8 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <cstring>
+using std::strcpy;
 
 // -------- Utility functions --------------
 /**

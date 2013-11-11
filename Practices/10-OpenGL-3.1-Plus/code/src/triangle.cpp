@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
     glutCreateWindow("Triangle");
 
     // Initialize GLEW.
-    glewExperimental = TRUE; // This is a hack. Without it the current GLEW version fails to load
+    glewExperimental = true; // This is a hack. Without it the current GLEW version fails to load
                              // some extension functions. See http://www.opengl.org/wiki/OpenGL_Loading_Library
     if (glewInit() != GLEW_OK) {
         cout << "Glew initialization failed" << endl;
