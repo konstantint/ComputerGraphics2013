@@ -1,12 +1,14 @@
 /**
  * MTAT.03.015 Computer Graphics.
- * Practice session 5: Vertex shaders
+ * Shader configuration utility routines.
  */
 #include "shader_util.h"
 #include <stdexcept>
 #include <cerrno>
 #include <iostream>
+#include <sstream>
 #include <fstream>
+#include <vector>
 
 // -------- Utility functions --------------
 /**
@@ -16,7 +18,7 @@ std::string get_file_contents(const char *filename) {
     std::ifstream in(filename, std::ios::in | std::ios::binary);
     if (in) return std::string((std::istreambuf_iterator<char>(in)),
                                 std::istreambuf_iterator<char>());
-    else throw(errno);
+    else throw(std::runtime_error(std::string("Failed to read file ") + filename));
 }
 
 /**
@@ -24,9 +26,23 @@ std::string get_file_contents(const char *filename) {
  */
 GLuint compile(GLuint type, std::string source) {
     GLuint shader = glCreateShader(type);
-    const GLchar* code[] = { source.c_str() };
-    glShaderSource(shader, 1, code, NULL);
+
+    // Split the code into separate lines (then the compilation error messages are more informative)
+    std::vector<GLchar *> lines;
+    std::string line;
+    std::istringstream ss(source);
+    while(getline(ss, line)) {
+        line += '\n';
+        GLchar* c_line = (GLchar*)malloc(line.size()+1);
+        strcpy(c_line, line.c_str());
+        lines.push_back(c_line);
+    }
+
+    // Compile the source
+    glShaderSource(shader, lines.size(), (const GLchar**)&lines[0], NULL);
     glCompileShader(shader);
+    for (int i = 0; i < lines.size(); i++) free(lines[i]);
+
     GLint compiled;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
     if (!compiled) {
@@ -78,8 +94,31 @@ void shader_prog::free() {
     glDeleteProgram(prog);
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
+    glUseProgram(0);
 }
 
 shader_prog::operator GLuint() {
     return prog;
 }
+
+void shader_prog::uniform1i(const char* name, int i) {
+    GLint loc = glGetUniformLocation(prog, name);
+    if (loc < 0) throw (std::runtime_error(std::string("Location not found in shader program for variable ") + name));
+    glUniform1i(loc, i);
+}
+void shader_prog::uniform1f(const char* name, float f) {
+    GLint loc = glGetUniformLocation(prog, name);
+    if (loc < 0) throw (std::runtime_error(std::string("Location not found in shader program for variable ") + name));
+    glUniform1f(loc, f);
+}
+void shader_prog::uniform3f(const char* name, float x, float y, float z) {
+    GLint loc = glGetUniformLocation(prog, name);
+    if (loc < 0) throw (std::runtime_error(std::string("Location not found in shader program for variable ") + name));
+    glUniform3f(loc, x, y, z);
+}
+void shader_prog::uniformMatrix4fv(const char* name, const float* matrix) {
+    GLint loc = glGetUniformLocation(prog, name);
+    if (loc < 0) throw (std::runtime_error(std::string("Location not found in shader program for variable ") + name));
+    glUniformMatrix4fv(loc, 1, GL_FALSE, matrix);
+}
+

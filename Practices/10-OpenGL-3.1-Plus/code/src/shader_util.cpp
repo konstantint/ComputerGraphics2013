@@ -28,19 +28,21 @@ GLuint compile(GLuint type, std::string source) {
     GLuint shader = glCreateShader(type);
 
     // Split the code into separate lines (then the compilation error messages are more informative)
-    std::vector<std::string> v_lines;
-    std::vector<const GLchar *> lines;
+    std::vector<GLchar *> lines;
     std::string line;
     std::istringstream ss(source);
     while(getline(ss, line)) {
         line += '\n';
-        v_lines.push_back(line);
-        lines.push_back(line.c_str());
+        GLchar* c_line = (GLchar*)malloc(line.size()+1);
+        strcpy(c_line, line.c_str());
+        lines.push_back(c_line);
     }
 
     // Compile the source
-    glShaderSource(shader, lines.size(), &lines[0], NULL);
+    glShaderSource(shader, lines.size(), (const GLchar**)&lines[0], NULL);
     glCompileShader(shader);
+    for (int i = 0; i < lines.size(); i++) free(lines[i]);
+
     GLint compiled;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
     if (!compiled) {

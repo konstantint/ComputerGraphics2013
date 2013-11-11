@@ -1,6 +1,6 @@
 /**
  * MTAT.03.015 Computer Graphics.
- * Practice session 7: Lighting
+ * Shader configuration utility routines.
  */
 #include "shader_util.h"
 #include <stdexcept>
@@ -28,19 +28,21 @@ GLuint compile(GLuint type, std::string source) {
     GLuint shader = glCreateShader(type);
 
     // Split the code into separate lines (then the compilation error messages are more informative)
-    std::vector<std::string> v_lines;
-    std::vector<const GLchar *> lines;
+    std::vector<GLchar *> lines;
     std::string line;
     std::istringstream ss(source);
     while(getline(ss, line)) {
         line += '\n';
-        v_lines.push_back(line);
-        lines.push_back(line.c_str());
+        GLchar* c_line = (GLchar*)malloc(line.size()+1);
+        strcpy(c_line, line.c_str());
+        lines.push_back(c_line);
     }
 
     // Compile the source
-    glShaderSource(shader, lines.size(), &lines[0], NULL);
+    glShaderSource(shader, lines.size(), (const GLchar**)&lines[0], NULL);
     glCompileShader(shader);
+    for (int i = 0; i < lines.size(); i++) free(lines[i]);
+
     GLint compiled;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
     if (!compiled) {
@@ -112,6 +114,11 @@ void shader_prog::uniform1f(const char* name, float f) {
 void shader_prog::uniform3f(const char* name, float x, float y, float z) {
     GLint loc = glGetUniformLocation(prog, name);
     if (loc < 0) throw (std::runtime_error(std::string("Location not found in shader program for variable ") + name));
-    glUniform3f(prog, x, y, z);
+    glUniform3f(loc, x, y, z);
+}
+void shader_prog::uniformMatrix4fv(const char* name, const float* matrix) {
+    GLint loc = glGetUniformLocation(prog, name);
+    if (loc < 0) throw (std::runtime_error(std::string("Location not found in shader program for variable ") + name));
+    glUniformMatrix4fv(loc, 1, GL_FALSE, matrix);
 }
 

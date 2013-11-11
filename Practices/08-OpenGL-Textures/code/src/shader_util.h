@@ -1,4 +1,5 @@
 /**
+ * MTAT.03.015 Computer Graphics.
  * Shader configuration utility routines.
  */
 #include <string>
@@ -23,4 +24,5 @@ public:
     void uniform1i(const char* name, int i);
     void uniform1f(const char* name, float f);
     void uniform3f(const char* name, float x, float y, float z);
+    void uniformMatrix4fv(const char* name, const float* matrix);
 };
