@@ -87,7 +87,7 @@ vec3 sphere_color = vec3(1.0, 0.0, 0.0);
 vec3 plane_color(vec3 point) {
 	// Checkerboard
 	float col = float(mod(floor(point.x) + floor(point.z), 2.0));
-	return 0.8*vec3(col);
+	return vec3(col);
 }
 
 

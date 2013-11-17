@@ -66,7 +66,7 @@ Exercise session XI: Raytracing.}
 
 In this exercise session we shall study the basics of raycasting, raytracing and raymarching. For simplicity and convenience we shall be using the ShaderToy website\footnote{\url{https://www.shadertoy.com/}} and implement our raytracing code as a fragment shader\footnote{Note, that although GLSL's fragment shaders are conceptually very well suited for implementing raytracing-based techniques, in practice you would not be able to use them for large scenes. Firstly, there is a limit to the amount of data you can keep within the shader code. Secondly, GLSL lacks dynamic memory structures and recursion, which makes it impossible or hard to implement several algorithms. Finally, efficient raytracing may require multiple passes over the whole image -- something not possible within a single fragment shader.}.
 
-The solutions will have to be submitted as a set of text files, zipped in a single archive.
+The solutions will have to be submitted as a set of text files, zipped in a single archive. Solution to exercise $N$ should be saved in a file named \texttt{exercise}$N$\texttt{.glsl}.
 
 \section{Basic Raycasting}
 Let us start with a basic raycasting example. The idea of raycasting is to send a ray from the eye through each pixel on screen and check whether it intersects with some geometry in the scene. The two main steps of a raycasting algorithm are therefore the following:
@@ -81,7 +81,7 @@ $$
 
 \paragraph{2. Cast the ray and look for intersections with objects in the scene.} Given the ray origin point $O$ (which corresponds to the camera position, i.e. $(0, 0, 0)$ in our case) and ray direction that we computed in the previous step, we can check for all primitives in the scene whether the ray intersects them, look for the closest one, and return the color of the pixel.
 
-\begin{exercise}{1}{1.0}
+\begin{exercise}{1}{0.5}
 The code base for this exercise is provided on the ShaderToy at \url{https://www.shadertoy.com/view/ldSGzW}. Examine the code. We would like to raycast the following scene:
 \begin{center}
 \includegraphics[width=0.7\textwidth]{raycasting.png}
@@ -94,7 +94,6 @@ The methods for finding ray-object intersection are also provided: functions \ve
 \item Then fix the main function so that the resulting image would have a field of view of 60 degrees along the $y$ axis.
 \item At this point you will see the scene rendered. However, it will have a lot of aliasing artifacts: the sphere has jagged edges and the checkerboard pattern turns into nonsense at a distance. Let us fix this using a simple 3x3 discrete box filter. That is, rather than using a single ray for pixel $(x,y)$, cast 9 rays, as if you would be rendering pixels $\{x-0.2, x, x+0.2\}\times\{y-0.2, y, y+0.2\}$, and average the results\footnote{You are free to try larger grids, however note that having long nested loops in shader code may lead to weird results on some graphics cards.}. 
 \end{enumerate}
-Submit the solution to this exercise in the file \verb#exercise01.glsl#.
 \end{exercise}
 
 \section{Raytracing}
@@ -103,20 +102,23 @@ Let us now extend the basic raycasting algorithm we just implemented to support 
 \item \textbf{Lighting.}  We shall now be using lighting computations. Consequently, rather than specifying object colors, we specify their materials as \verb#sphere_mat# and \verb#plane_mat()#. Ambient light is given in the \verb#ambient# variable, and a single light source is described in \verb#light#.
 Finally, the function \verb#lighting# implements the familiar Blinn-Phong light model. Note that this function takes a \verb#viewer_pos# argument rather than assuming the viewer to be fixed at $(0, 0, 0)$. Think why it is done this way.
 \item \textbf{More detailed raycasting.} The \verb#raycast_scene# routine is updated to not only return the distance to the closest object, but also the actual point location, the normal at that point and the material of the object.
-\item The actual scene rendering routine, \verb#render_scene# is now separate from the raycasting function (the latter is now just a useful primitive).
+\item The actual scene rendering routine, \verb#render_scene# is now separate from the raycasting function (which is now just a useful primitive).
 \end{enumerate}
 
 \begin{exercise}{2}{1}
 Update the function \verb#render_scene# to implement recursive raytracing with shadows and reflections.
 \begin{enumerate}
 \item To implement shadows, cast a ray from the point towards the light source. If this \emph{shadow ray} hits anything on the way, you can consider the point to be in shadow (and thus only affected by ambient light).
-\item To implement reflections, note that the \verb#Material# structure has a field \verb#reflectivity#. This is the weight with which the reflected ray contributes to the visible color of a point with this material. The full color of a point is then its ``usual'' color + reflectivity weight times the color ``seen'' by the reflected ray. Implement at least two reflection steps (Hint: this is naturally done using a loop).
+\item To implement reflections, note that the \verb#Material# structure has a field \verb#reflectivity#. This is the weight with which the reflected ray contributes to the visible color of a point with this material. The full color of a point is then its ``usual'' color + reflectivity weight times the color ``seen'' by the reflected ray. Implement at least two reflection steps. (Hint: this is naturally done using a loop).
 \end{enumerate}
-Submit the solution to this exercise in the file \verb#exercise02.glsl#.
 The resulting image should look as follows:
 \begin{center}
 \includegraphics[width=0.7\textwidth]{raytracing.png}
 \end{center}
+
+Hint: Remember that ray direction vectors must always be normalized.
+
+Hint: You can use the \texttt{reflect} GLSL function to compute reflection vectors.
 \end{exercise}
 
 \begin{exercise}{3*}{0.5}
@@ -124,6 +126,58 @@ An example of a great purely-raytracing based scene is the shader ``Relentless''
 \begin{center}
 \includegraphics[width=0.7\textwidth]{relentless.png}
 \end{center}
-Let the sphere radius be $1$ and its center be right in front of the camera, at distance $2$. For simplicity you may assume that the sphere is always the topmost object (i.e. resolve ray intersection with the sphere first of all).
+Let the sphere radius be $1$. Have its center positioned straight in front of the camera, at distance $2$. For simplicity you may assume that the sphere is always the topmost object (i.e. resolve ray intersection with the sphere first of all).
 \end{exercise}
+
+\section{Raymarching}
+When objects have complex descriptions, it may become easier to search for ray-object intersections using iterative numerical methods, resulting in the family of \emph{raymarching} algorithms. \emph{Sphere tracing} is a particularly fast version of raymarching, which can be applied if the scene is modeled as a \emph{distance field}. A distance field is a function that for any point $(x, y, z)$ returns the distance to the nearest object in the scene. For example, if the scene consists of a single sphere of radius R centered at the origin, the corresponding distance function is as simple as
+$$
+f(\bp) = \Vert \bp \Vert - R
+$$
+
+Distance fields are a very flexible means for modeling complex scenes, see \url{http://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm}.
+The normal to a point on a surface described by a distance field can be obtained by simply taking the normalized gradient of the field at that point:
+$$
+\text{normal}(\bp) \propto \nabla f(\bp) \approx \frac{1}{\varepsilon}\left(f(\bp+(\varepsilon, 0, 0)), f(\bp+(0, \varepsilon, 0)), f(\bp+(0, 0, \varepsilon))\right).
+$$
+
+\begin{exercise}{4}{0.5}
+Open the code in \url{https://www.shadertoy.com/view/MsjGRD}. The \texttt{main} function presents you with a familiar structure of a raytracer. The difference is only that the core function this time is called \texttt{raymarch} rather than \texttt{raycast}. Implementing this function is your first task. 
+
+The task of the function \texttt{raymarch(ro, rd)} is walk from the point \texttt{ro} along the ray in direction \texttt{rd} in steps of size \texttt{scene(x)}, looking for a point \texttt{x} where the function \texttt{scene} becomes nearly zero. If you implement this algorithm correctly, you should see the rendering of the scene, which is originally a simple rounded box:
+\begin{center}
+\includegraphics[width=0.7\textwidth]{raymarching1.png}
+\end{center}
+\end{exercise}
+
+
+\begin{exercise}{5}{0.5}
+Next, let us make the scene a bit more interesting. For that we shall use the basic operations with distance field functions, that are already pre-specified for you in the code. Make the changes to the \texttt{scene} function, that will change the scene from a static rounded box, to a rotating grid of rounded boxes, each with a hole drilled in it, i.e. turn the scene into this:
+\begin{center}
+\includegraphics[width=0.7\textwidth]{raymarching2.png}
+\end{center}
+The comments in the code provide you the parameter values.
+\end{exercise}
+
+\begin{exercise}{6*}{0.5}
+Modify the code so that the sides of the holes, drilled in the cubes would be colored red:
+\begin{center}
+\includegraphics[width=0.7\textwidth]{raymarching3.png}
+\end{center}
+Hint: For this you will need to change the \texttt{scene} function so that it would not only return the distance, but also the color of the corresponding region of the field. The simplest approach is to have \texttt{scene} return a \texttt{vec4} (instead of a \texttt{float}), so that its first three components correspond to the color and the fourth is the distance, as before.
+\end{exercise}
+
+\begin{exercise}{7*}{0.5}
+Implement reflections:
+\begin{center}
+\includegraphics[width=0.7\textwidth]{raymarching4.png}
+\end{center}
+Hint: The approach is similar to the one used in Exercise 2. Make a new function \texttt{render}, that will invoke \texttt{raymarch} inside a loop, accumulating the resulting color as a weighted sum of multiple reflections. Assume the reflectivity coefficient to be $0.2$.
+\end{exercise}
+
+
+\begin{exercise}{8*}{1}
+Read the article \emph{Distance Estimated 3D Fractals}\footnote{\url{http://blog.hvidtfeldts.net/index.php/2011/06/distance-estimated-3d-fractals-part-i/}}. Present a shader implementation of any Mandelbulb fractal.
+\end{exercise}
+
 \end{document}
