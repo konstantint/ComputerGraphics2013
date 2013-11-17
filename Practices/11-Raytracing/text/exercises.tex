@@ -94,6 +94,29 @@ The methods for finding ray-object intersection are also provided: functions \ve
 \item Then fix the main function so that the resulting image would have a field of view of 60 degrees along the $y$ axis.
 \item At this point you will see the scene rendered. However, it will have a lot of aliasing artifacts: the sphere has jagged edges and the checkerboard pattern turns into nonsense at a distance. Let us fix this using a simple 3x3 discrete box filter. That is, rather than using a single ray for pixel $(x,y)$, cast 9 rays, as if you would be rendering pixels $\{x-0.2, x, x+0.2\}\times\{y-0.2, y, y+0.2\}$, and average the results\footnote{You are free to try larger grids, however note that having long nested loops in shader code may lead to weird results on some graphics cards.}. 
 \end{enumerate}
+Submit the solution to this exercise in the file \verb#exercise01.glsl#.
+\end{exercise}
+
+\section{Raytracing}
+Let us now extend the basic raycasting algorithm we just implemented to support shadows and reflections. This results in what is typically referred to as \emph{recursive raytracing}. Open the code base given at \url{https://www.shadertoy.com/view/Ms2GzW}. This is a slightly extended of the previous exercise. Note the following changes:
+\begin{enumerate}
+\item \textbf{Lighting.}  We shall now be using lighting computations. Consequently, rather than specifying object colors, we specify their materials as \verb#sphere_mat# and \verb#plane_mat()#. Ambient light is given in the \verb#ambient# variable, and a single light source is described in \verb#light#.
+Finally, the function \verb#lighting# implements the familiar Blinn-Phong light model. Note that this function takes a \verb#viewer_pos# argument rather than assuming the viewer to be fixed at $(0, 0, 0)$. Think why it is done this way.
+\item \textbf{More detailed raycasting.} The \verb#raycast_scene# routine is updated to not only return the distance to the closest object, but also the actual point location, the normal at that point and the material of the object.
+\item The actual scene rendering routine, \verb#render_scene# is now separate from the raycasting function (the latter is now just a useful primitive).
+\end{enumerate}
+
+\begin{exercise}{2}{1}
+Update the function \verb#render_scene# to implement recursive raytracing with shadows and reflections.
+\begin{enumerate}
+\item To implement shadows, cast a ray from the point towards the light source. If this \emph{shadow ray} hits anything on the way, you can consider the point to be in shadow (and thus only affected by ambient light).
+\item To implement reflections, note that the \verb#Material# structure has a field \verb#reflectivity#. This is the weight with which the reflected ray contributes to the visible color of a point with this material. The full color of a point is then its ``usual'' color + reflectivity weight times the color ``seen'' by the reflected ray. Implement at least two reflection steps (Hint: this is naturally done using a loop).
+\end{enumerate}
+Submit the solution to this exercise in the file \verb#exercise02.glsl#.
+The resulting image should look as follows:
+\begin{center}
+\includegraphics[width=0.7\textwidth]{raytracing.png}
+\end{center}
 \end{exercise}
 
 \end{document}
