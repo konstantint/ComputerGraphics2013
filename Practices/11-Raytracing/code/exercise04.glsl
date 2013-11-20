@@ -106,7 +106,7 @@ vec3 scene_color(vec3 x) {
 // --------------- Raymarching algorithm ------------ //
 vec3 raymarch(vec3 ro, vec3 rd) {
 	// EXERCISE: Implement the sphere tracing algorithm
-	//  - Start at the ray origin rd.
+	//  - Start at the ray origin ro.
 	//	- Proceed step by step along direction rd
 	//  - Step size from position (x) is given by the distance
 	//    field value, i.e. scene(x)
