@@ -15,7 +15,7 @@ The contents of this repository can be reused freely, subject to the following c
  Some of the slides include images from external sources, not all of them freely (or even explicitly) licensed. To my best knowledge such use
  is legal for non-commercial educational purposes in Estonia [(Copyright Act, § 19)](http://www.legaltext.ee/et/andmebaas/tekst.asp?loc=text&dok=X40022K9&keel=en&pg=1&ptyyp=RT&tyyp=X&query=copy), but this may not be the case for every country.
  * The source code of the practice sessions (contents of the code/src subdirectories) is subject to the MIT license.
-   Libraries that are used within the exercise projects (e.g. Allegro and FreeGlut) are subject to their own licenses.
+   Libraries that are used within the exercise projects (e.g. Allegro, FreeGlut, GLimg, GLM, OGRE) are subject to their own licenses (all are open-source, though).
 
 
  
