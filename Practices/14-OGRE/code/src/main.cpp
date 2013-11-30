@@ -274,7 +274,7 @@ public:
         // -------- Scene geometry -------- //
         // Create a particle system
         Ogre::ParticleSystem* psystem = scene->createParticleSystem("Jet", "Examples/JetEngine1");
-        scene->getRootSceneNode()->createChildSceneNode("Particle")->attachObject(psystem);
+        scene->getRootSceneNode()->createChildSceneNode("Particle")->attachObject((Ogre::MovableObject*)psystem);
 
         return scene;
     }
