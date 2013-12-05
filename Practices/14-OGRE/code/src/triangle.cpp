@@ -2,7 +2,7 @@
  * MTAT.03.015 Computer Graphics.
  * Practice session 14: OGRE
  *
- * (Those are preliminary ideas for the practice session)
+ * Simple triangle
  */
 #include <OgreCommon.h>
 #include <OgreManualObject.h>
@@ -37,7 +37,7 @@ public:
     void run() {
         // ----------------------- Create root object & window --------------------- //
         // Initialize (~ glutInit)
-        mRoot = new Ogre::Root("plugins.cfg");
+        mRoot = new Ogre::Root();
         mRoot->restoreConfig();                  // Read config from ogre.cfg
         //if(!mRoot->showConfigDialog()) return; // Alternatively, you can show a dialog window here
 
@@ -61,11 +61,9 @@ public:
         // with a Camera (view-projection transform)
         mScene = createTriangleScene();      // Very basic colored triangle
 
-        // Let mScene[0] be the starting "current scene"
         // Configure the window to show the camera from the current scene
         // This is like (~ glViewport), in that you could specify the region of the window to draw to.
         // and have several scenes rendered to different parts in the window.
-        mWindow->removeAllViewports();
         Ogre::Viewport* vp = mWindow->addViewport(mScene->getCamera("MainCamera"));
 
         // ~ glClearColor
@@ -125,6 +123,10 @@ public:
         // the object's geometry with its modeling transform
         // (see frameRenderingQueued to understand how to rotate the triangle by changing this transform)
         scene->getRootSceneNode()->createChildSceneNode("Triangle")->attachObject(triangle);
+
+        // Exercise 1: Create new object, add vertices, attach the objec to a new SceneNode
+        // ...
+
         return scene;
     }
 
@@ -136,6 +138,9 @@ public:
         Ogre::SceneNode* triangle = mScene->getSceneNode("Triangle");
         triangle->resetToInitialState();
         triangle->rotate(Ogre::Vector3(0, 0, 1), Ogre::Radian(t));
+
+        // Exercise 1: Use SceneNode to manipulate the object and create anit
+        // ...
 
         return true; // Return false to quit
     }
