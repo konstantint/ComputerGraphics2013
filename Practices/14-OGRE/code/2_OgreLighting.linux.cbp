@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="OgreLighting" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin-linux/OgreLighting" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin-linux/" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fmessage-length=0" />
+			<Add option="-fexceptions" />
+			<Add option="-fident" />
+			<Add option="-Wno-unused-local-typedefs" />
+			<Add option="-Wno-strict-aliasing" />
+			<Add directory="/usr/include/OGRE" />
+			<Add directory="/usr/include/OIS" />
+			<Add directory="include/OGRE" />
+		</Compiler>
+		<Linker>
+			<Add option="-s" />
+			<Add library="OgreMain" />
+			<Add library="OIS" />
+		</Linker>
+		<Unit filename="src/input_util.h" />
+		<Unit filename="src/lighting.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

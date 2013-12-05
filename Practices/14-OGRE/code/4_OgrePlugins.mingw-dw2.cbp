@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="OgrePlugins" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin-dw2/OgrePlugins" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin-dw2/" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-mthreads" />
+			<Add option="-fmessage-length=0" />
+			<Add option="-fexceptions" />
+			<Add option="-fident" />
+			<Add option="-Wno-unused-local-typedefs" />
+			<Add option="-Wno-strict-aliasing" />
+			<Add option="-DWIN32" />
+			<Add option="-D_WINDOWS" />
+			<Add directory="include/OGRE" />
+			<Add directory="include/OIS" />
+			<Add directory="use-this-path-with-full-ogre-sdk-instead-$(OGRE_HOME)/include/OGRE" />
+			<Add directory="use-this-path-with-full-ogre-sdk-instead-$(OGRE_HOME)/boost" />
+			<Add directory="use-this-path-with-full-ogre-sdk-instead-$(OGRE_HOME)/include/OIS" />
+		</Compiler>
+		<Linker>
+			<Add option="-s" />
+			<Add option="-Wl,--enable-auto-image-base" />
+			<Add option="-Wl,--add-stdcall-alias" />
+			<Add option="-Wl,--enable-auto-import" />
+			<Add library="OgreMain" />
+			<Add library="OIS" />
+			<Add library="boost_system-mgw47-mt-1_51" />
+			<Add directory="lib/mingw-dw2" />
+			<Add directory="use-this-path-with-full-ogre-sdk-instead-$(OGRE_HOME)/boost/lib" />
+			<Add directory="use-this-path-with-full-ogre-sdk-instead-$(OGRE_HOME)/lib/$(TARGET_NAME)" />
+		</Linker>
+		<Unit filename="src/input_util.h" />
+		<Unit filename="src/plugins.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
