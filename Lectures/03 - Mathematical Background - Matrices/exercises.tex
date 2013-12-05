@@ -1,0 +1,123 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, mdwlist, graphicx, hyperref}
+
+
+\newcommand{\mpar}[1]{\marginpar{\textit{#1}}}
+\newcommand{\norm}[1]{\Vert #1 \Vert}
+\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\argmin}{argmin}
+\newenvironment{solution}{\paragraph{Solution.}$\,$ }{\vskip 3mm\hrule}
+\newenvironment{exercise}[2]{\begin{verse}\textbf{Exercise #1 (#2pt).} }{
+\end{verse}\medskip}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bd}{\mathbf{d}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bs}{\mathbf{s}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bc}{\mathbf{c}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bzero}{\mathbf{0}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bSigma}{\mathbf{\Sigma}}
+\newcommand{\bp}{\mathbf{p}}
+\newcommand{\bm}{\mathbf{m}}
+\newcommand{\bM}{\mathbf{M}}
+\newcommand{\bK}{\mathbf{K}}
+\newcommand{\bD}{\mathbf{D}}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bR}{\mathbf{R}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bS}{\mathbf{S}}
+\newcommand{\bT}{\mathbf{T}}
+\newcommand{\balpha}{\boldsymbol{\alpha}}
+\newcommand{\pt}[2]{\left(\begin{array}{c}#1\\#2\end{array}\right)}
+
+
+
+\begin{document}
+\title{MTAT.03.015 Computer Graphics (Fall 2013)\\
+Lectures II \& III: Math exercises}
+\author{Konstantin Tretyakov\\
+\medskip
+\\
+\parbox{9cm}{\small Solution for every task gives 0.5 points. Solutions are accepted on paper or via e-mail (\texttt{kt@ut.ee}) until October 2, 2013.}
+}
+\date{}
+\maketitle
+
+
+\begin{enumerate}
+\item Let $s$ be a straight line in $\bbR^2$, passing through the origin. It can be described parametrically as
+$$
+\bx = \lambda \bs, \qquad \lambda \in \bbR,
+$$
+or implicitly as
+$$
+\bn^T\bx = 0\,.
+$$
+Express the coordinates of the normal vector $\bn$ via the coordinates of the direction vector $\bs$.
+
+\item Let $\ba, \bb, \bc, \bd$ be points in $\bbR^2$. Find the coordinates of the intersection point of segments $[\ba, \bb]$ and $[\bc, \bd]$. Hint: Use the parametric representation.
+
+\item Prove that the (Euclidean) norm $\Vert \bx \Vert = \sqrt{\bx^T\bx}$ satisfies the \emph{triangle inequality}:
+$$
+\Vert \bx + \by \Vert \leq \Vert \bx \Vert + \Vert \by \Vert.
+$$
+Derive from this inequality also the inequalities 
+$$\norm{\bx}-\norm{\by} \leq \norm{\bx - \by} \leq \norm{\bx} + \norm{\by}.$$
+
+\item Let $\bp$ and $\bq$ be orthonormal vectors in $\bbR^3$. What transformation does the matrix $\bp\bp^T + \bq\bq^T$ correspond to? Prove it.
+
+\item Let $\bp$, $\bq$, $\br$ be an orthonormal basis in $\bbR^3$. Prove that $\bp\bp^T + \bq\bq^T + \br\br^T = \bI$, where $\bI$ denotes a unit matrix.
+
+\item Orthogonalize the following set of vectors using the Gram-Schmidt algorithm:
+\begin{align*}
+ \be_1 &= (\frac{\sqrt{2}}{2},\frac{\sqrt{2}}{2},0)^T \\
+ \be_2 &= (-1, 1, -1)^T \\
+ \be_3 &= (0, -2, -2)^T \\
+\end{align*}
+
+\item Compute the area of a triangle given by vertices
+\begin{align*}
+ \ba &= (1, 2, 3)^T, \\
+ \bb &= (-2, 2, 4)^T, \\
+ \bc &= (7, -8, 0)^T.\\
+\end{align*}
+
+\item Points $\bp_1, \bp_2, \dots, \bp_n \in \bbR^2$ are vertices of a simple polygon\footnote{A \emph{simple polygon} is a polygon, whose edges do not intersect each other.} listed in counter-clockwise order in a right-handed basis.
+Prove that the area of the polygon $S$ can be computed as
+\[
+S = \frac{1}{2}(|\bp_1 \quad \bp_2| + |\bp_2 \quad \bp_3| + \dots + |\bp_n \quad \bp_1|)
+\]
+%Explain the connection between this equation, and the \emph{Green's formula}:
+%\[
+%\oint_{\mathcal{D}} f(x,y)\dd x + g(x, y)\dd y = \iint_{\mathcal{D}}\left(\pd{g}{x} - \pd{f}{y}\right)\dd x \dd y
+%\]
+%Hint 1: let $f(x,y) := -y$, $g(x, y) := x$. \\
+%Hint 2: $|\bp_1\quad\bp_2| = |\bp_1\quad(\bp_2 -\bp_1)|$.
+
+\item Let $f: \bbR^m\to\bbR^n$ be a continuous function that satisfies $f(\bx + \by) = f(\bx) + f(\by)$ for each $\bx, \by$. Show that it then necessarily follows that for each $\alpha \in \bbR$ and each $\bx$
+$$
+f(\alpha\bx) = \alpha f(\bx),
+$$
+i.e. $f$ must be linear.
+
+%\item Let $\{\bx_1, \bx_2, \dots, \bx_n\}$ be linearly independent vectors in $\bbR^m$. Find $\rank(\sum_{i=1}^n \bx_i\bx_i^T)$.
+
+\item
+Consider a polyhedron with vertices $\bp_1, \bp_2, \dots, \bp_k$. Let $\bn_1$, $\bn_2, \dots, \bn_l$ be the normals for the faces of the polyhedron. Let us apply a linear transformation $\bF$ to all the vertices of the polyhedron. The vertices of the new polyhedron are thus $\bF\bp_1, \bF\bp_2, \dots, \bF\bp_k$. Express the normals of the new polyhedron in terms of the original normals.
+
+\end{enumerate}
+\end{document}

@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, mdwlist, graphicx, hyperref}
+
+
+\newcommand{\mpar}[1]{\marginpar{\textit{#1}}}
+\newcommand{\norm}[1]{\Vert #1 \Vert}
+\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\argmin}{argmin}
+\newenvironment{solution}{\paragraph{Solution.}$\,$ }{\vskip 3mm\hrule}
+\newenvironment{exercise}[2]{\begin{verse}\textbf{Exercise #1 (#2pt).} }{
+\end{verse}\medskip}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bd}{\mathbf{d}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bs}{\mathbf{s}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bc}{\mathbf{c}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bzero}{\mathbf{0}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bSigma}{\mathbf{\Sigma}}
+\newcommand{\bp}{\mathbf{p}}
+\newcommand{\bm}{\mathbf{m}}
+\newcommand{\bM}{\mathbf{M}}
+\newcommand{\bK}{\mathbf{K}}
+\newcommand{\bD}{\mathbf{D}}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bR}{\mathbf{R}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bS}{\mathbf{S}}
+\newcommand{\bT}{\mathbf{T}}
+\newcommand{\balpha}{\boldsymbol{\alpha}}
+\newcommand{\pt}[2]{\left(\begin{array}{c}#1\\#2\end{array}\right)}
+
+
+
+\begin{document}
+\title{MTAT.03.015 Computer Graphics (Fall 2013)\\
+Lecture V: Math exercises}
+\author{Konstantin Tretyakov\\
+\medskip
+\\
+\parbox{9cm}{\small Solution for every task gives 0.5 points. Solutions are accepted on paper or via e-mail (\texttt{kt@ut.ee}) until October 16, 2013.}
+}
+\date{}
+\maketitle
+
+
+\begin{enumerate}
+
+\item Let the horizontal field of view (\emph{fov-X}) of some \emph{view-frustum} be 75 degrees. Let the screen dimensions be $1280\times 1024$. Find the corresponding vertical field of view  (\emph{fov-Y}).
+
+\item Consider a perspective projection in two-dimensional space. We shall be projecting to the line $y = 1$ with $(0, 0)$ as the center of projection.
+\begin{itemize}
+	\item Find the projection matrix in homogeneous coordinates.
+	\item Explain what linear transformation does this matrix correspond to in the three-dimensional homogeneous space. Illustrations are welcome.
+\end{itemize}
+
+\item Let $ax + by + cz + d = 0$ be some plane in three-dimensional space and let $P = (p_x, p_y, p_z)$ be a point not located on this plane. Find a matrix, that performs a perspective projection from $P$ onto this plane (in homogeneous coordinates).
+
+\item Let $P_1 = (x_1, y_1, z_1)$, $P_2 = (x_2, y_2, z_2)$ -- be points in space. Consider some attribute $\mathcal{A}$ (e.g. color) assigned to the points. Suppose that point $P_1$ is assigned attribute value $a_1$, point $P_2$ --- value $a_2$ and on the line between them the attribute varies linearly.
+
+Let $P_1^*$, $P_2^*$ --- be the perspective projections of points $P_1$ and $P_2$ onto the plane $z = z_n$ with $(0, 0, 0)$ as the center of projection.
+Let $P_t^*$ be a point obtained by interpolating between $P_1^*$ and $P_2^*$: 
+$$P_t^* = tP_1^* + (1-t)P_2^*,$$
+and let $P_t = (x_t, y_t, z_t)$ be the point of the segment $[P_1, P_2]$ that projects into $P_t^*$. Show that the value $a_t$ of the attribute at point $P_t$ satisfies
+\[ \frac{a_t}{z_t} = t \frac{a_1}{z_1} + (1-t)\frac{a_2}{z_2}\, .\]
+Try to find a simple geometric proof to this fact.
+
+It follows from this result, than when you are rasterizing a triangle, which was obtained via perspective projection, you cannot simply interpolate attribute values (e.g. colors or texture coordinates) along the screen as you did in the practice session\footnote{\url{http://en.wikipedia.org/wiki/Texture_mapping\#Perspective_correctness}}.
+
+\end{enumerate}
+\end{document}

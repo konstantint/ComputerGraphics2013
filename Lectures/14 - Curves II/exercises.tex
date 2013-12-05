@@ -1,0 +1,102 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, mdwlist, graphicx, hyperref}
+
+
+\newcommand{\mpar}[1]{\marginpar{\textit{#1}}}
+\newcommand{\norm}[1]{\Vert #1 \Vert}
+\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\argmin}{argmin}
+\newenvironment{solution}{\paragraph{Solution.}$\,$ }{\vskip 3mm\hrule}
+\newenvironment{exercise}[2]{\begin{verse}\textbf{Exercise #1 (#2pt).} }{
+\end{verse}\medskip}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bd}{\mathbf{d}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bs}{\mathbf{s}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bc}{\mathbf{c}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\be}{\mathbf{e}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bzero}{\mathbf{0}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bSigma}{\mathbf{\Sigma}}
+\newcommand{\bp}{\mathbf{p}}
+\newcommand{\bm}{\mathbf{m}}
+\newcommand{\bM}{\mathbf{M}}
+\newcommand{\bG}{\mathbf{G}}
+\newcommand{\bK}{\mathbf{K}}
+\newcommand{\bD}{\mathbf{D}}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bR}{\mathbf{R}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bS}{\mathbf{S}}
+\newcommand{\bT}{\mathbf{T}}
+\newcommand{\balpha}{\boldsymbol{\alpha}}
+\newcommand{\pt}[2]{\left(\begin{array}{c}#1\\#2\end{array}\right)}
+
+
+\newcommand{\Bezier}{B\'{e}zier}
+
+\begin{document}
+\title{MTAT.03.015 Computer Graphics (Fall 2013)\\
+Lectures XIII \& XIV: Math exercises}
+\author{Konstantin Tretyakov\\
+\medskip
+\\
+\parbox{9cm}{\small Solution for every task gives 0.5 points. Solutions are accepted on paper or via e-mail (\texttt{kt@ut.ee}) until December 18, 2013.}
+}
+\date{}
+\maketitle
+
+
+\begin{enumerate}
+\item Bring examples of a two-piece linear spline curve, which happens to be:
+\begin{enumerate}
+\item $C^1$-smooth at the connection point.
+\item $G^1$-smooth, but not $C^1$-smooth at the connection point.
+\end{enumerate}
+
+\item Construct the basis matrices for:
+\begin{enumerate}
+\item the linear \Bezier' curve,
+\item the quadratic \Bezier' curve.
+\end{enumerate}
+
+\item Construct the basis matrices for:
+\begin{enumerate}
+\item the linear Lagrange' curve,
+\item the quadratic Lagrange' curve (assume the parameter vector for the control points to be $t=(0, 0.5, 1)$).
+\end{enumerate}
+
+\item Construct a one-dimensional quadratic Lagrange' curve defined by control points $(0, 1, 0)$. Provide the answer as a polynomial in $t$.
+
+\item Consider the curve in the previous exercise. Convert it to the \Bezier' representation. That is, find the \Bezier' control points for exactly the same curve.
+
+\item Prove that degree $n$ Bernstein polynomials $B_i^{(n)}, i\in\{0, 3\}$ sum to one, i.e.:
+$$
+\sum_{i=0}^n B_i^{(n)}(t) = 1,\text{   for all   }n\in\mathbb{N}, t\in[0,1].
+$$
+Hint: one way to show it is to note that the Bernstein polynomials are somehow related to a well-known probability distribution.
+
+\item A Hermite' curve is a reparameterization of the cubic \Bezier' curve, that is specified by its start and end points $\bp_0$, $\bp_3$ and its direction vectors (i.e. gradients) $\bs_0$, $\bs_3$ at those points. In other words, the geometry matrix for the Hermite' curve is $\bG=(\bp_0, \bp_3, \bs_0, \bs_3)$. Derive the basis matrix $\bM_H$ of the Hermite curve.
+
+\item Prove that a cubic B-spline will pass a control point, if it is repeated three times.
+
+\item We derived the cubic B-spline to be a curve that is $C^2$-smooth at all points, no matter what the control points are. However, we also somewhy said that repeating control points ``reduces smoothness'' and even saw an example where repeating the control point three times results in a curve with a sharp corner. This seems like a contradiction. Explain this.
+
+\item Prove that a (uniform) B-spline of degree $k$ with $n$ control points has $n+k+1$ knots. 
+
+Hint: count the number of curve segments and add the ``virtual'' segments on both sides, where the basis functions for the first and last control points are still nonzero.
+\end{enumerate}
+\end{document}
