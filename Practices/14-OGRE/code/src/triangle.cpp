@@ -124,7 +124,7 @@ public:
         // (see frameRenderingQueued to understand how to rotate the triangle by changing this transform)
         scene->getRootSceneNode()->createChildSceneNode("Triangle")->attachObject(triangle);
 
-        // Exercise 1: Create new object, add vertices, attach the objec to a new SceneNode
+        // Exercise 1: Create new object, add vertices, attach the object to a new SceneNode
         // ...
 
         return scene;
@@ -139,7 +139,7 @@ public:
         triangle->resetToInitialState();
         triangle->rotate(Ogre::Vector3(0, 0, 1), Ogre::Radian(t));
 
-        // Exercise 1: Use SceneNode to manipulate the object and create anit
+        // Exercise 1: Use SceneNode to manipulate the object and create animation
         // ...
 
         return true; // Return false to quit
