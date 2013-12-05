@@ -74,8 +74,8 @@ We start by comparing the structure of the application to the familiar structure
 \begin{exercise}{1}{0.5}
 Add a small square which will fly around the triangle and rotate around it's own center. For that you will need to
 \begin{enumerate}
-	\item Create a new \verb#Ogre::ManualObject# object using \verb#createManualObject()# method of the scene manager.
-	\item Describe vertices of you square. Look up in the documentation of the \\
+	\item Create new \verb#Ogre::ManualObject# object using \verb#createManualObject()# method of the scene manager.
+	\item Describe vertices of your square. Look up in the documentation of the \\
 \verb#Ogre::RenderOperation# class\footnote{\url{http://www.ogre3d.org/docs/api/html/classOgre_1_1RenderOperation.html}} which operation type you should use. Note that in OGRE we first create the vertex itself and then describe it's attributes.
 	\item Create \verb#Ogre::SceneNode# and attach the new object to it.
 	\item Use this \verb#SceneNode# to animate our object (update it's potision) in the \verb#frameRenderingQueued()# method, which is an analog of \verb#idleFunc()# in GLUT.
