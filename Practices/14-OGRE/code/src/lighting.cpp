@@ -2,7 +2,7 @@
  * MTAT.03.015 Computer Graphics.
  * Practice session 14: OGRE
  *
- * Lighting and materials
+ * Lighting, materials and textures
  */
 #include <OgreCommon.h>
 #include <OgreManualObject.h>

@@ -68,7 +68,7 @@ In this exercise session we will have a look at high-level graphics engine calle
 
 The solutions will have to be submitted as a zipped project directory. Please keep Windows libraries even if you work on Linux or Mac.
 
-You can always seek for additional information and help in official tutorials \url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Tutorials}: Basic Tutorials section.
+You can always seek for additional information and help in official tutorials \url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Tutorials}.
 
 \section{Structure of the application}
 We start by comparing the structure of the application to the familiar structure we've been using so far. Please open \verb#1_OgreTriangle# project and read through the code in the \verb#triangle.cpp# file. Compare it to the GLUT-based applications we have seen before.
@@ -88,7 +88,7 @@ The existing code for the triangle will serve you as example. The result should 
 \end{center}
 \end{exercise}
 
-\section{High-levelness}
+\section{Lighting, materials and textures}
 
 Open project \verb#2_OgreLighting#. The structure is same as before. Have a look at \verb#createLitSphereScene()#, here we create a sphere, add materials to it and enable lighting. See how it is done. Now pay attention to these lines in the middle of  \verb#run()# function:
 \begin{verbatim}
@@ -139,19 +139,44 @@ After completing exercises 3, 4 and 5 your scene will be something like this:
 \includegraphics[width=0.7\textwidth]{ex3-4-5.png}
 \end{center}
 
-Now let us move to the next project and see how OGRE works with meshes. Open project \verb#3_OgreMesh# and 
+
+
+\section{Meshes and animations}
+
+Now let us move to the next project and see how OGRE works with meshes. Open project \verb#3_OgreMesh#. Meshes are handles as any other object we have seen before: they are entities, have \verb#SceneNode# and you can specify materials and textures and shadows in the exactly same way as we have seen before. You can see that in \verb#setupBody()#.
+
+The code you see in this project is rather complicated and represents simplified and adopted version of \verb#CharacterAnimation# OGRE sample application. You do not need to understand everything what is happening there, although it should not be hard.
+
+\begin{exercise}{6}{0.5}
+Currently our character is only able to run forward and swing sword on left mouse click (this does not work until you draw swords out, which you will need to implement). Add the following functionality (coding should happen inside keyboard and mouse listener section and in \verb#updateBody# method, you will see guiding comments in there):
+\begin{enumerate}
+	\item Enable movement in all four directions using \verb#WASD# keys
+	\item Enable jumps on \verb#Spacebar#
+	\item Draw swords on \verb#Q#
+	\item On left mouse click the character swings sword vertically, but there is also horizontal swing animation available, make him do that on on right mouse click
+	\item Do now allow character to run off the floor
+\end{enumerate}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{ex6.png}
+\end{center}
+\end{exercise}
+
+
+\begin{exercise}{7*}{2}
+In OGRE official Basic Tutorial 3: ``Terrain, Sky, and Fog"\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+3}} you can learn how to create terrains, sky (as we already did in exercise 4) and fog. Like this:
+\begin{center}
+\includegraphics[width=0.7\textwidth]{terrain.jpg}
+\end{center}
+Take character from the previous exercise and place him into such world. Choose details to your own liking: terrain, sky, light, shadows, textures, reflections, army of ogres, another creatures\footnote{Look inside \texttt{media/models} folder of OGRE SDK for more meshes and characters}, mysterious reflective spheres in the middle of everything...
+\end{exercise}
 
 
 \section{Plugins}
 
 Open project \verb#4_OgrePlugins#. You can switch scenes, look how it's done.
 
-\begin{exercise}{6}{0.5}
-Do ??? with particle system
-\end{exercise}
-
-\begin{exercise}{6*}{1}
-Add some other plugin (or any other display of creativity?)
+\begin{exercise}{8}{0.5}
+Make source of the particles move along with the mouse.
 \end{exercise}
 
 
