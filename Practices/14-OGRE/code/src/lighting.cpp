@@ -49,6 +49,9 @@ public:
         Ogre::Viewport* vp = mWindow->addViewport(mScene->getCamera("MainCamera"));
         vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 
+        // Enable control of a camera with mouse & keyboard using the utility class.
+        mEventListener->controlCamera(mScene->getCamera("MainCamera"));
+
         // ------------------------ Configuration complete ----------------- //
         mRoot->startRendering();
     }
@@ -84,7 +87,7 @@ public:
         posLight->setType(Ogre::Light::LT_POINT);
         posLight->setDiffuseColour(0.7, 0.7, 0.7);
         posLight->setSpecularColour(0.7, 0.7, 0.7);
-        posLight->setPosition(7, 5, 10);
+        posLight->setPosition(3, 4, 10);
 
         // Next we need to create a material.
         // A common method is to provide it as a "material script" in the resources directory and
@@ -116,7 +119,22 @@ public:
         sphereNode->attachObject(sphere);
         sphereNode->setPosition(Ogre::Vector3(0.0, 0.0, 0.0));
         sphereNode->setScale(Ogre::Vector3(0.02, 0.02, 0.02));
-        sphere->setMaterialName("Sphere/Material");
+        sphere->setCastShadows(true);
+
+        // Exercise 2: Change material name to the one you described in .material file
+        sphere->setMaterialName("SphereMaterialCode");
+
+        // Exercise 3: Enable shadows
+        // ...
+
+        // Exercise 3: Add a plane (by analogy with the code for the sphere)
+        // ...
+
+        // Exercise 4: Set material name to be the one with your favourite texture
+        // ...
+
+        // Exercise 4: Enable SkyDome or SkyBox
+        // ...
 
         return scene;
     }
@@ -125,13 +143,11 @@ public:
     bool frameRenderingQueued(const Ogre::FrameEvent& evt) {
         float t = mTimer.getMilliseconds()*0.001;
 
-        // Do some simple animations by changing scene node transform parameters
-        //Ogre::SceneNode* triangle2 = mScene->getSceneNode("Triangle");
-        //triangle2->resetToInitialState();
-        //triangle2->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(t));
+        // Here you can do some simple animations by changing scene node transform parameters
 
         return true; // Return false to quit
     }
+
 };
 
 int main(int argc, char *argv[]) {

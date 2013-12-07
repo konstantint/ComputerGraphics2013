@@ -64,7 +64,7 @@ Exercise session XIV: OGRE}
 \date{December 9, 2013}
 \maketitle
 
-In this exercise session we will have a look at high-level graphics engine called OGRE\footnote{\url{http://www.ogre3d.org/}}. We will see how the concepts we know about are included into the OGRE engine making our life easier: lighting, materials, shadows, environmental mapping and other techniques are made accessible by adding few lines of code, without the need to implement all annoying details on our own.
+In this exercise session we will have a look at high-level graphics engine called OGRE\footnote{\url{http://www.ogre3d.org/}}. We will see how the concepts we know about are included into the OGRE engine, making our life easier: lighting, materials, shadows, environmental mapping and other techniques are made accessible by adding few lines of code, without the need to implement all annoying details on our own.
 
 The solutions will have to be submitted as a zipped project directory. Please keep Windows libraries even if you work on Linux or Mac.
 
@@ -88,47 +88,58 @@ The existing code for the triangle will serve you as example. The result should 
 \end{center}
 \end{exercise}
 
-%\begin{exercise}{2}{0.5}
-%You may have noticed that all objects on the scene are associated with \verb#Ogre::SceneManager# object. The whole scene, including objects, their locations (through \verb#Ogre::SceneNode#), cameras, lights and so on, is described and stored using screen manager. This provides us with a natural way to define several scenes.
-%In this exercise you need to add second scene to the application, put any object of your liking in there and use spacebar to toggle between the scenes.
-%\end{exercise}
-
 \section{High-levelness}
 
-Open project \verb#2_OgreLight#. The structure is same as before. Have a look at \verb#createLitSphereScene()#, here we create a sphere and add materials and lighting to it. See how it is done. Now pay attention to these lines in the middle of  \verb#run()# function:
+Open project \verb#2_OgreLighting#. The structure is same as before. Have a look at \verb#createLitSphereScene()#, here we create a sphere, add materials to it and enable lighting. See how it is done. Now pay attention to these lines in the middle of  \verb#run()# function:
 \begin{verbatim}
 Ogre::ResourceGroupManager::getSingleton().
                      addResourceLocation("../data", "FileSystem");Ogre::ResourceGroupManager::getSingleton().
                      initialiseAllResourceGroups();
 \end{verbatim}
-First line tells OGRE where to look for resources: data files and \emph{scripts}. Second line instructs it to read in resource descriptions and initialise \emph{resource groups}. Have a look at the file \verb#Examples.material# in the \verb#data# folder and try to apply some of materials described there to our sphere:
+Instead of writing material properties into the code, materials (and some other things) can be described in special \emph{script} files. First line tells OGRE where to look for resources: various data files (textures, meshes, etc.) and scripts. Second line instructs it to read in resource descriptions and initialise \emph{resource groups}.
+
+Have a look at the \verb#Examples.material# file in the \verb#data# folder and try to apply some of materials described there to our sphere:
 \begin{verbatim}
 sphere->setMaterialName("Examples/WaterStream");
 \end{verbatim} 
 If you would like to try other examples you should download Ogre SDK\footnote{\url{http://www.ogre3d.org/download/sdk}} and add the resources needed for each particular example to our \verb#data# folder.
 
 \begin{exercise}{2}{0.5}
-Create a new file \verb#data/Sphere.material#. Use \verb#data/# \verb#Examples.material# and \url{http://www.ogre3d.org/docs/manual/manual_16.html} to create a material script, which reproduces exactly same material settings as we have in our code. The result should look exactly the same: red sphere with white specular spot on it.
+Create new file \verb#data/Sphere.material#. Here we will describe material for our sphere. Use \verb#data/Examples.material# and \url{http://www.ogre3d.org/docs/manual/manual_16.html} to create a material script, which exactly reproduces material parameters we have specified in the code. The result should look exactly the same: red sphere with white specular spot on it.
+Note that you can use \verb#WASD# keys to move the camera and mouse to look around.
 \end{exercise}
 
-\begin{exercise}{3*}{0.5}
-Texture
+\begin{exercise}{3}{0.5}
+In practice session \#9, which was about different types of shadows, we implemented three different shadow techniques. You might remember that for implementing stencil shadows you first needed to create shadow volume objects and after that implement the logic by carefully playing with stencil, color and depth buffers. OGRE allows you to enable stencil shadows with literally one line of code\footnote{See more \url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+2}}:
+\begin{verbatim}
+scene->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+\end{verbatim}
+Create a plane (\verb#Ogre::SceneManager::PT_PLANE#) below the sphere and enable shadows. Note that you can enable or disable whether specific object casts a shadow using \verb#setCastShadows()# method of \verb#Ogre::Entity# object.
 \end{exercise}
 
 \begin{exercise}{4}{0.5}
-Add a plane and a stencil shadow
+Next let's see how we can map textures on our objects. The best way to do that is, again, by using \verb#.material# scripts. Check out \verb#data/Examples.material# for examples. Note that you can create animated textures just by adding one line (for example see \verb#Examples/WaterStream#). Find your favourite picture in the internet and use it as texture for the plane.
+
+Another popular use of texture is environmental mapping or cube mapping. Have a look at the tutorial\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+3}} and add SkyBox or SkyDome to our scene.
 \end{exercise}
 
-\ \\
-Open project \verb#3_OgreMesh#
-
-\begin{exercise}{5}{1}
-Skybox with sky texture. Or any other texture (are there many of them in OGRE?)
+\begin{exercise}{5*}{0.5}
+Look at the scene now. You might feel the urge to make sphere reflective. Study the code in \verb#examples/CubeMapping/include/CubeMapping.h#. Here is an approximate description of the steps you need to do:
+\begin{enumerate}
+	\item Make our \verb#Application# class inherit \verb#Ogre::RenderTargetListener#
+	\item Make use of \verb#preRenderTargetUpdate()# method
+	\item Add some global variables
+	\item Create cube map texture in the same way as it is done in \verb#createCubeMap()#
+	\item Use \verb#Examples/DynamicCubeMap# to create a new material in our \verb#Sphere.material# script
+	\item Enable this material using \verb#setMaterialName()# method 	
+\end{enumerate}
 \end{exercise}
+After completing exercises 3, 4 and 5 your scene will be something like this:
+\begin{center}
+\includegraphics[width=0.7\textwidth]{ex3-4-5.png}
+\end{center}
 
-\begin{exercise}{6*}{0.5}
-Make mesh reflective. So that it will reflect this skybox
-\end{exercise}
+Now let us move to the next project and see how OGRE works with meshes. Open project \verb#3_OgreMesh# and 
 
 
 \section{Plugins}

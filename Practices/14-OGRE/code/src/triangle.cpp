@@ -65,6 +65,9 @@ public:
         // ~ glClearColor
         vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 
+        // Enable control of a camera with mouse & keyboard using the utility class.
+        mEventListener->controlCamera(mScene->getCamera("MainCamera"));
+
         // ------------------------ Configuration complete ----------------- //
         // Enter the infinite rendering & event processing loop.
         // ~ glutMainLoop()
