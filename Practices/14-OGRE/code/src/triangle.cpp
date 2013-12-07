@@ -49,21 +49,17 @@ public:
 
         // Register keyboard and mouse callbacks (~ glutMouseFunc, glutKeyboardFunc, glutWindowFunc)
         // This class already implements some logic, such as "quit on Escape".
+        // It is described in input_util.h, feel free to play with that implementation.
         mEventListener = new SimpleMouseAndKeyboardListener(mWindow, mRoot, this);
 
-        // Also, tell OGRE where to look for data files (textures, materials, etc)
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation("../data", "FileSystem");
-        Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups(); // Scan files in the directory we provided above
-
-        // ----------- Create scenes ----------------- //
+        // ----------- Create scene ----------------- //
         // Each scene is represented by a "SceneManager" object, which
         // combines a SceneGraph (set of objects with their model transforms)
         // with a Camera (view-projection transform)
         mScene = createTriangleScene();      // Very basic colored triangle
 
-        // Configure the window to show the camera from the current scene
         // This is like (~ glViewport), in that you could specify the region of the window to draw to.
-        // and have several scenes rendered to different parts in the window.
+        // You can have several scenes rendered to different parts in the window.
         Ogre::Viewport* vp = mWindow->addViewport(mScene->getCamera("MainCamera"));
 
         // ~ glClearColor

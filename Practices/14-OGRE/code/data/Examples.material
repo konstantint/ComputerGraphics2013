@@ -513,7 +513,7 @@ material Examples/WaterStream
 	{
 		pass
 		{
-			ambient 0.1 0.1 0.1
+			ambient 0.4 0.4 0.4
 			scene_blend add
 			depth_write off
 			cull_software none
@@ -521,13 +521,13 @@ material Examples/WaterStream
 
 			texture_unit
 			{
-				texture Water01.jpg
+				texture Water02.jpg
 				scroll_anim 0.125 0
 			}
 
 			texture_unit
 			{
-				texture Water01.jpg
+				texture Water02.jpg
 				wave_xform scroll_y sine 0 0.1 0 0.25
 			}
 		}
