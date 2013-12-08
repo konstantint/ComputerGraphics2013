@@ -110,15 +110,16 @@ Note that you can use \verb#WASD# keys to move the camera and mouse to look arou
 \end{exercise}
 
 \begin{exercise}{3}{1}
-Next, let us see how we can map textures on our objects. The best way to do that is, again, by using \verb#.material# scripts.
+Next, let us see how we can use textures in OGRE. The best way to do that is, again, by using \verb#.material# scripts.
 \begin{enumerate}
-	\item Check out \verb#data/Examples.material# for examples. Note that you can create animated textures just by adding one line (for example see \verb#Examples# \verb#/WaterStream#). Find your favourite picture in the internet and use it as the texture for the plane.
-	\item Another popular use of texture is cube mapping. Have a look at the tutorial\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+3}} and add SkyBox to our scene.
+	\item See different material examples in \verb#data/Examples.material#, which have \verb#texture_unit# section. Note how you can create animated textures just by adding one line in the material script (for example see \verb#Examples# \verb#/WaterStream#).
+	\item Create new material script \verb#Plane.material#. Describe there new material which has \verb#texture_unit#. Find your favourite picture in the internet and use it as the texture for the plane.
+	\item Another popular use of textures is cube mapping. For that you need 6 images, which have common prefix \verb#mytexture_# and six suffixes, one for each side of the cube: \verb#bk#, \verb#dn#, \verb#fr#, \verb#lf#, \verb#rt#, \verb#up#. See images \verb#stevecube_*.jpg# in our \verb#data# folder. You can use those or find/create your own. Have a look at the tutorial\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+3}} and add SkyBox to our scene.
 \end{enumerate}
 \end{exercise}
 
 \begin{exercise}{4*}{1}
-Look at the scene now. You might feel the urge to make sphere reflective. Study the code in \verb#examples/CubeMapping/include/CubeMapping.h#. Here is an approximate description of the steps you need to do to create dynamical cube mapping (texture is updated on each frame and you will see actual reflections of moving objects):
+Look at the scene now. You might feel the urge to make sphere reflective. Study the code in \verb#examples/CubeMapping/include/CubeMapping.h#. Here is an approximate description of the steps you need to do to create dynamical cube mapping:
 \begin{enumerate}
 	\item Make our \verb#Application# class inherit \verb#Ogre::RenderTargetListener#
 	\item Make use of \verb#preRenderTargetUpdate()# method
@@ -127,6 +128,7 @@ Look at the scene now. You might feel the urge to make sphere reflective. Study 
 	\item Use \verb#Examples/DynamicCubeMap# to create a new material in our \verb#Sphere.material# script
 	\item Enable this material using \verb#setMaterialName()# method 	
 \end{enumerate}
+Note how we use additional camera to update textures used for the cube. Since textures are updated on each frame you will get actual dynamic reflections.
 \end{exercise}
 After completing exercises 3, 4 and 5 your scene will be something like this. 
 \begin{center}
@@ -183,7 +185,7 @@ In the \verb#data/Character# directory among other things we have \verb#Sinbad.s
 	\item You can control phase of the animation with \verb#addTime()# method of \verb#AnimationState#. Use it in \verb#animateObjects()# routine.
 	\item Use \verb#setEnable()# method to enable and diable animation in \verb#keyPressed()# and \verb#keyReleased()# routines.
 \end{enumerate}
-In total this animation can enabled with 5 lines of code (not counting few \verb#if# statements, which you will probably need). Congratulations! You now have running ogre at your disposal.
+In total this animation can be enabled with 5 lines of code (not counting few \verb#if# statements, which you will probably need). Congratulations! You now have running ogre at your disposal.
 \end{exercise}
 
 \begin{center}
