@@ -198,7 +198,7 @@ Study the code there and implement in our application idle animation, jump, smoo
 \ \\
 \ \\
 
-Complex meshes like the one we have been using, their skeletons and animations can be created with modeling tools like Blender and then exported to OGRE format using exporters\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Blender+Exporter}} provided by OGRE.
+Complex meshes like the one we have been using, their skeletons and animations can be created with modeling tools like Blender and then exported to OGRE format using exporters\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Blender+Exporter}} provided by OGRE. Our Sinbad was created in Blender, so you can open \verb#data/Character/Sinbad.blend# and do with it whatever you want. To access list of animations open "Dope Sheet" in one of the panels, Choose "Action Editor" and then you will see a drop-down list with all available animations.
 
 \begin{exercise}{9*}{1}
 It should be possible to export the mesh (and its animation) we have created on previous practice session to OGRE format and use in your application. Submit an application with self-made animated mesh to get a bonus point.
@@ -220,11 +220,11 @@ mRoot = new Ogre::Root("plugins.cfg");
 \end{verbatim}
 It tells OGRE name of the file in \verb#bin# directory where plugin configuration resides. Inside that file you will see how we enable plugin called ParticleFX. This plugin has a configuration file, which resembles \verb#.material# files we have seen before. Open \verb#data/Examples.particle# and study it.
 
-\begin{exercise}{11}{0.5}
+\begin{exercise}{11}{1}
 To complete this exercise do the following:
 \begin{enumerate}
 	\item Make particle source follow mouse movements. For that you will need to add mouse listener in the way analogous to the way how keyboard listener is added. See helpful comments in the code.
-	\item Play with different examples and their parameters, create a particle system you like, describe it in a new \verb#.particle# file and enable in the application.
+	\item Play with different examples and their parameters, make particles fly in random directions, describe it in a new \verb#.particle# file and enable in the application.
 \end{enumerate}
 \end{exercise}
 
