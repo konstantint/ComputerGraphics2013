@@ -2,8 +2,9 @@
  * MTAT.03.015 Computer Graphics.
  * Practice session 14: OGRE
  *
- * (Those are preliminary ideas for the practice session)
+ * Plugins
  */
+#include <iostream>
 #include <OgreCommon.h>
 #include <OgreManualObject.h>
 #include <OgreRoot.h>
@@ -14,21 +15,17 @@
 
 #include "input_util.h"
 
-/**
- * Rather than having separate functions, like we did in GLUT (i.e. display, idle, ...)
- * This time we shall put all of them into a class.
- * Our "main" function (below at the end of the file) simply creates this class and calls its "run"
- * function.
- */
+// Exercise 8: make Application class inherit OIS::MouseListener class
+// ...
 class Application: public Ogre::FrameListener, public OIS::KeyListener {
 public:
     Ogre::Root *mRoot;
     Ogre::RenderWindow* mWindow;
     SimpleMouseAndKeyboardListener* mEventListener;
 
-    Ogre::SceneManager* mScene; // The scene
+    Ogre::SceneManager* mScene;
 
-    Ogre::Timer mTimer; // ~ for glutGet(GLUT_ELAPSED_TIME)
+    Ogre::Timer mTimer;
 
     /**
      * Application main function:
@@ -36,40 +33,28 @@ public:
      */
     void run() {
         // ----------------------- Create root object & window --------------------- //
-        // Initialize (~ glutInit)
         mRoot = new Ogre::Root("plugins.cfg");
-        mRoot->restoreConfig();                  // Read config from ogre.cfg
+        mRoot->restoreConfig();
         //if(!mRoot->showConfigDialog()) return; // Alternatively, you can show a dialog window here
-
-        // Create window (~ glutCreateWindow)
         mWindow = mRoot->initialise(true, "Basic OGRE example");
-
-        // Register per-frame callbacks (~ glutIdleFunc)
         mRoot->addFrameListener(this);
 
-        // Register keyboard and mouse callbacks (~ glutMouseFunc, glutKeyboardFunc, glutWindowFunc)
-        // This class already implements some logic, such as "quit on Escape".
+        // Exercise 8: Read class description in input_util.h and update this line
+        // ...
         mEventListener = new SimpleMouseAndKeyboardListener(mWindow, mRoot, this);
 
         // Also, tell OGRE where to look for data files (textures, materials, etc)
         Ogre::ResourceGroupManager::getSingleton().addResourceLocation("../data", "FileSystem");
         Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups(); // Scan files in the directory we provided above
 
-        // ----------- Create scenes ----------------- //
-        // Each scene is represented by a "SceneManager" object, which
-        // combines a SceneGraph (set of objects with their model transforms)
-        // with a Camera (view-projection transform)
+        // ----------- Create scene ----------------- //
         mScene = createParticleScene();      // Very basic colored triangle
-
-        // Let mScene[0] be the starting "current scene"
-        // Configure the window to show the camera from the current scene
-        // This is like (~ glViewport), in that you could specify the region of the window to draw to.
-        // and have several scenes rendered to different parts in the window.
         mWindow->removeAllViewports();
         Ogre::Viewport* vp = mWindow->addViewport(mScene->getCamera("MainCamera"));
-
-        // ~ glClearColor
         vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
+
+        // Enable control of a camera with mouse & keyboard using the utility class.
+        mEventListener->controlCamera(mScene->getCamera("MainCamera"));
 
         // ------------------------ Configuration complete ----------------- //
         // Enter the infinite rendering & event processing loop.
@@ -85,19 +70,17 @@ public:
         return true;
     }
 
+    // Exercise 8: add mouse listener here
+    // ...
+
     // ------------------------- Now the sample scene descriptions ------------------------- //
-    // In contrast to OpenGL where we had to emit actual drawing commands,
-    // here we describe what will be drawn and store it in a scene graph.
-    // Ogre will then perform the drawing on each frame by traversing the scene graph as needed
-    // (perhaps in multiple rendering passes).
-    //
     Ogre::SceneManager* createParticleScene() {
         Ogre::SceneManager* scene = mRoot->createSceneManager(Ogre::ST_GENERIC);
 
-        // Configure camera (~ view & projection transforms, i.e. gluLookAt + gluPerspective)
-        Ogre::Camera* camera = scene->createCamera("MainCamera"); // We can use an arbitrary name here
-        camera->setPosition(Ogre::Vector3(0,0,50));               // ~gluLookAt
-        camera->lookAt(Ogre::Vector3(0,0,0));
+        // Configure camera
+        Ogre::Camera* camera = scene->createCamera("MainCamera");
+        camera->setPosition(Ogre::Vector3(0, 0, 150));
+        camera->lookAt(Ogre::Vector3(0, 0, 0));
         camera->setNearClipDistance(0.5);
         camera->setFOVy(Ogre::Degree(60.0));
         camera->setAspectRatio((float) mWindow->getWidth() / mWindow->getHeight());
@@ -112,7 +95,11 @@ public:
 
     // FrameListener callback (~ idleFunc). Perform animation here
     bool frameRenderingQueued(const Ogre::FrameEvent& evt) {
-        return true; // Return false to quit
+
+        // Exercise 8: update particle source potision here
+        // ...
+
+        return true;
     }
 };
 
