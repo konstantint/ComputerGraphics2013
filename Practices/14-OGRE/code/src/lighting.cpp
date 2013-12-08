@@ -2,7 +2,7 @@
  * MTAT.03.015 Computer Graphics.
  * Practice session 14: OGRE
  *
- * Lighting, materials and textures
+ * Lighting, materials and
  */
 #include <OgreCommon.h>
 #include <OgreManualObject.h>
@@ -33,7 +33,7 @@ public:
         mRoot = new Ogre::Root("plugins.cfg");
         mRoot->restoreConfig();                  // Read config from ogre.cfg
         //if(!mRoot->showConfigDialog()) return; // Alternatively, you can show a dialog window here
-        mWindow = mRoot->initialise(true, "Basic OGRE example");
+        mWindow = mRoot->initialise(true, "Light, Material and Textures");
         mRoot->addFrameListener(this);
         mEventListener = new SimpleMouseAndKeyboardListener(mWindow, mRoot, this);
 
@@ -114,26 +114,28 @@ public:
         // http://www.ogre3d.org/docs/manual/manual_16.html#Passes
 
         // -------- Scene geometry -------- //
+
+        // Sphere
         Ogre::Entity* sphere = scene->createEntity("Sphere", Ogre::SceneManager::PT_SPHERE);
         Ogre::SceneNode* sphereNode = scene->getRootSceneNode()->createChildSceneNode("SphereNode");
         sphereNode->attachObject(sphere);
         sphereNode->setPosition(Ogre::Vector3(0.0, 0.0, 0.0));
         sphereNode->setScale(Ogre::Vector3(0.02, 0.02, 0.02));
-        sphere->setCastShadows(true);
 
         // Exercise 2: Change material name to the one you described in .material file
         sphere->setMaterialName("SphereMaterialCode");
 
-        // Exercise 3: Enable shadows
+        // Plane
+        Ogre::Entity* plane = scene->createEntity("Plane", Ogre::SceneManager::PT_PLANE);
+        Ogre::SceneNode* planeNode = scene->getRootSceneNode()->createChildSceneNode("PlaneNode");
+        planeNode->attachObject(plane);
+        planeNode->rotate(Ogre::Vector3(-1, 0, 0), Ogre::Degree(90));
+        planeNode->translate(0, -10, 0);
+
+        // Exercise 3: Add your favourite picture as texture for the plane
         // ...
 
-        // Exercise 3: Add a plane (by analogy with the code for the sphere)
-        // ...
-
-        // Exercise 4: Set material name to be the one with your favourite texture
-        // ...
-
-        // Exercise 4: Enable SkyDome or SkyBox
+        // Exercise 3: Enable SkyDome or SkyBox
         // ...
 
         return scene;
@@ -143,7 +145,7 @@ public:
     bool frameRenderingQueued(const Ogre::FrameEvent& evt) {
         float t = mTimer.getMilliseconds()*0.001;
 
-        // Here you can do some simple animations by changing scene node transform parameters
+        // Here you can do some simple animations by playing with scene node transformation methods
 
         return true; // Return false to quit
     }
