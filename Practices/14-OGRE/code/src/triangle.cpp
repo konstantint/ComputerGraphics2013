@@ -59,14 +59,13 @@ public:
         mScene = createTriangleScene();      // Very basic colored triangle
 
         // This is like (~ glViewport), in that you could specify the region of the window to draw to.
-        // You can have several scenes rendered to different parts in the window.
+        // You can have several scenes and switch which one is being rendered by
+        // first doing mWindow->removeAllViewports and then configuring the necessary scene for the viewport
+        // Also, you can have several scenes rendered at the same time to different parts in the window.
         Ogre::Viewport* vp = mWindow->addViewport(mScene->getCamera("MainCamera"));
 
         // ~ glClearColor
         vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
-
-        // Enable control of a camera with mouse & keyboard using the utility class.
-        mEventListener->controlCamera(mScene->getCamera("MainCamera"));
 
         // ------------------------ Configuration complete ----------------- //
         // Enter the infinite rendering & event processing loop.
@@ -123,7 +122,7 @@ public:
         // (see frameRenderingQueued to understand how to rotate the triangle by changing this transform)
         scene->getRootSceneNode()->createChildSceneNode("Triangle")->attachObject(triangle);
 
-        // Exercise 1: Create new object, add vertices, attach the object to a new SceneNode
+        // Exercise 1: Create a new object, add vertices, attach the object to a new SceneNode within a scene graph.
         // ...
 
         return scene;
@@ -138,7 +137,7 @@ public:
         triangle->resetToInitialState();
         triangle->rotate(Ogre::Vector3(0, 0, 1), Ogre::Radian(t));
 
-        // Exercise 1: Use SceneNode to manipulate the object and create animation
+        // Exercise 1: Use the other SceneNode you created to animate the object
         // ...
 
         return true; // Return false to quit

@@ -2,7 +2,7 @@
  * MTAT.03.015 Computer Graphics.
  * Practice session 14: OGRE
  *
- * Meshes
+ * Meshes and skeletal animation
  */
 #include <OgreCommon.h>
 #include <OgreManualObject.h>
@@ -52,7 +52,8 @@ public:
 
         // Create scene
         mScene = createOgreScene();
-        mWindow->removeAllViewports();
+
+        // Set current scene
         Viewport* vp = mWindow->addViewport(mScene->getCamera("MainCamera"));
         vp->setBackgroundColour(ColourValue(0, 0, 0));
 
@@ -75,6 +76,7 @@ public:
 
 		return true;
     }
+
     bool keyReleased(const OIS::KeyEvent &arg) {
 
         // Stop running

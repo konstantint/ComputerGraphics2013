@@ -2,7 +2,7 @@
  * MTAT.03.015 Computer Graphics.
  * Practice session 14: OGRE
  *
- * Lighting, materials and
+ * Lighting, materials, solid objects, shadows.
  */
 #include <OgreCommon.h>
 #include <OgreManualObject.h>
@@ -45,7 +45,6 @@ public:
         mScene = createLitSphereScene();
 
         // Set current scene
-        mWindow->removeAllViewports();
         Ogre::Viewport* vp = mWindow->addViewport(mScene->getCamera("MainCamera"));
         vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 
@@ -66,7 +65,7 @@ public:
 
     // ------------------------- Description of the scene ------------------------- //
     /**
-     * Triangle with material, lighting and perspective projection.
+     * Sphere with material, lighting and perspective projection.
      */
     Ogre::SceneManager* createLitSphereScene() {
         Ogre::SceneManager* scene = mRoot->createSceneManager(Ogre::ST_GENERIC);
@@ -79,10 +78,10 @@ public:
         camera->setFOVy(Ogre::Degree(60.0));
         camera->setAspectRatio((float) mWindow->getWidth() / mWindow->getHeight());
 
-        // Set up lighting (~ glEnable(GL_LIGHTING), glEnable(GL_LIGHT0), glLightfv(...)):
+        // Set up ambient lighting (~ glEnable(GL_LIGHTING), glLightModel(..)):
         scene->setAmbientLight(Ogre::ColourValue(0.2, 0.2, 0.2));
 
-        // Positinal light
+        // Set up one positinal light (~ glEnable(GL_LIGHT0), glLightfv(...)
         Ogre::Light* posLight = scene->createLight("PosLight");
         posLight->setType(Ogre::Light::LT_POINT);
         posLight->setDiffuseColour(0.7, 0.7, 0.7);
@@ -92,11 +91,11 @@ public:
         // Uncomment this line to enable shadows
         //scene->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-        // Next we need to create a material.
+        // Next we need to provide a material.
         // A common method is to provide it as a "material script" in the resources directory and
         // then simply refer by name
         // (see http://www.ogre3d.org/docs/manual/manual_14.html, http://www.ogre3d.org/tikiwiki/Materials)
-        // However, to understand the inner workings, let's create the material in code here
+        // However, to understand the inner workings, let us create the material in code first
         Ogre::MaterialPtr m = Ogre::MaterialManager::getSingleton().create("SphereMaterialCode",
                                             Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
         m->setAmbient(1.0, 0.0, 0.0);
@@ -139,7 +138,7 @@ public:
         // Exercise 2: Add your favourite picture as texture for the plane
         // ...
 
-        // Exercise 3*: Enable SkyBox
+        // Exercise 3*: Enable the sky box
         // ...
 
         return scene;
@@ -149,7 +148,7 @@ public:
     bool frameRenderingQueued(const Ogre::FrameEvent& evt) {
         float t = mTimer.getMilliseconds()*0.001;
 
-        // Here you can do some simple animations by playing with scene node transformation methods
+        // Here you can do animations by playing with scene node transformation methods
 
         return true; // Return false to quit
     }
