@@ -2,13 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="OgrePlugins" />
+		<Option title="OgreParticles" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option output="bin-dw2/OgrePlugins" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin-dw2/" />
+				<Option output="bin/OgreParticles" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/" />
 				<Option object_output="obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -43,13 +43,12 @@
 			<Add option="-Wl,--enable-auto-import" />
 			<Add library="OgreMain" />
 			<Add library="OIS" />
-			<Add library="boost_system-mgw47-mt-1_51" />
-			<Add directory="lib/mingw-dw2" />
+			<Add directory="lib/mingw-sjlj" />
 			<Add directory="use-this-path-with-full-ogre-sdk-instead-$(OGRE_HOME)/boost/lib" />
 			<Add directory="use-this-path-with-full-ogre-sdk-instead-$(OGRE_HOME)/lib/$(TARGET_NAME)" />
 		</Linker>
 		<Unit filename="src/input_util.h" />
-		<Unit filename="src/plugins.cpp" />
+		<Unit filename="src/particles.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

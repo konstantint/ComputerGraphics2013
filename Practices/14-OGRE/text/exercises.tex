@@ -74,13 +74,13 @@ You can always seek for additional information and help in official tutorials \u
 We start by comparing the structure of the application to the familiar structure we have been using so far. Please open \verb#1_OgreTriangle# project and read through the code in the \verb#triangle.cpp# file. Compare it to the GLUT-based applications we have seen before.
 
 \begin{exercise}{1}{0.5}
-Add a small square which will fly around the triangle and rotate around its own center. For that you will need to
+Add a small square which will fly around the triangle and rotate around its own center. For that you will need to:
 \begin{enumerate}
 	\item Create new \verb#Ogre::ManualObject# object using \verb#createManualObject()# method of the scene manager.
 	\item Describe vertices of your square. Look up in the documentation of the \\
 \verb#Ogre::RenderOperation# class\footnote{\url{http://www.ogre3d.org/docs/api/html/classOgre_1_1RenderOperation.html}} which operation type you should use. Note that in OGRE we first create the vertex itself and then describe its attributes.
 	\item Create \verb#Ogre::SceneNode# and attach the new object to it.
-	\item Use this \verb#SceneNode# to animate our object (update its potision) in the \verb#frameRenderingQueued()# method, which is an analog of \verb#idleFunc()# in GLUT.
+	\item Use this \verb#SceneNode# to animate our object (update its potision) in the \verb#frameRenderingQueued()# method (which is an analog of \verb#idleFunc()# in GLUT).
 \end{enumerate}
 The existing code for the triangle will serve you as example. The result should look something like this:
 \begin{center}
@@ -90,36 +90,46 @@ The existing code for the triangle will serve you as example. The result should 
 
 \section{Lighting, materials and textures}
 
-Open project \verb#2_OgreLighting#. The structure is same as before. Have a look at \verb#createLitSphereScene()#, here we create a sphere, add materials to it and enable lighting. See how it is done. Now pay attention to these lines in the middle of  \verb#run()# function:
+Open project \verb#2_OgreLighting#. The structure is same as before. Have a look at \verb#createLitSphereScene()#. Here we configure our scene: create a sphere, add materials to it, enable lighting and shadows. See how it is done.
+
+In practice session \#9, which was about different types of shadows, we implemented three different shadow techniques. You might remember that for implementing stencil shadows you first needed to create shadow volume objects and after that implement the logic by carefully playing with stencil, color and depth buffers. OGRE allows you to enable stencil shadows with literally one line of code\footnote{See more \url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+2}}. Uncomment the following line to enable stencil shadows:
+\begin{verbatim}
+scene->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+\end{verbatim}
+Now pay attention to these lines in the middle of  \verb#run()# function:
 \begin{verbatim}
 Ogre::ResourceGroupManager::getSingleton().
                      addResourceLocation("../data", "FileSystem");Ogre::ResourceGroupManager::getSingleton().
                      initialiseAllResourceGroups();
 \end{verbatim}
-Instead of writing material properties into the code, materials (and some other things) can be described in special \emph{script} files. First line tells OGRE where to look for resources: various data files (textures, meshes, etc.) and scripts. Second line instructs it to read in resource descriptions and initialise \emph{resource groups}.
+Instead of writing material properties in the code, materials (and some other things) can be described in a special \emph{script} file. The first line tells OGRE where to look for the resources: data files (textures, meshes, etc.) and scripts. The second line instructs it to read in resource descriptions and initialise \emph{resource groups}.
 
 Have a look at the \verb#Examples.material# file in the \verb#data# folder and try to apply some of materials described there to our sphere:
 \begin{verbatim}
 sphere->setMaterialName("Examples/WaterStream");
 \end{verbatim} 
-If you would like to try other examples you should download Ogre SDK\footnote{\url{http://www.ogre3d.org/download/sdk}} and add the resources needed for each particular example to our \verb#data# folder.
+If you would like to try other examples you should download OGRE SDK\footnote{\url{http://www.ogre3d.org/download/sdk}} and add the resources needed for each particular example to our \verb#data# folder.
 
-\begin{exercise}{2}{0.5}
-Create new file \verb#data/Sphere.material#, where you will describe material for our sphere. Use \verb#data/Examples.material# and \url{http://www.ogre3d.org/docs/manual/manual_16.html} to create a material script, which exactly reproduces material parameters we have specified in the code. The result should look exactly the same: red sphere with white specular spot on it.
-Note that you can use \verb#WASD# keys to move the camera and mouse to look around.
-\end{exercise}
-
-\begin{exercise}{3}{1}
+\begin{exercise}{2}{1}
+Create two new files \verb#data/Sphere.material# and \verb#data/# \verb#Plane.material#. Those will be used to describe materials of our objects.
+\begin{enumerate}
+	\item[1.] Use \verb#data/Examples.material# and \url{http://www.ogre3d.org/docs/manual/manual_16.html} to create a material script for the sphere, which exactly reproduces material parameters we have specified in the code. The result should look exactly the same: red sphere with white specular spot on it.
+\end{enumerate}
 Next, let us see how we can use textures in OGRE. The best way to do that is, again, by using \verb#.material# scripts.
 \begin{enumerate}
-	\item See different material examples in \verb#data/Examples.material#, which have \verb#texture_unit# section. Note how you can create animated textures just by adding one line in the material script (for example see \verb#Examples# \verb#/WaterStream#).
-	\item Create new material script \verb#Plane.material#. Describe there new material which has \verb#texture_unit#. Find your favourite picture in the internet and use it as the texture for the plane.
-	\item Another popular use of textures is cube mapping. For that you need 6 images, which have common prefix \verb#mytexture_# and six suffixes, one for each side of the cube: \verb#bk#, \verb#dn#, \verb#fr#, \verb#lf#, \verb#rt#, \verb#up#. See images \verb#stevecube_*.jpg# in our \verb#data# folder. You can use those or find/create your own. Have a look at the tutorial\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+3}} and add SkyBox to our scene.
+	\item[2.] See material examples in \verb#data/Examples.material#, which have \verb#texture_unit# section. Note how you can create animated textures just by adding one line in the material script (for example see \verb#Examples/WaterStream#).
+	\item[3.] Describe the material with a texture in the \verb#Plane.material# file. Find your favourite picture in the internet and use it as the texture for the plane.
 \end{enumerate}
+Note that you can use \verb#WASD# keys to move the camera and mouse to look around.
+
 \end{exercise}
 
-\begin{exercise}{4*}{1}
-Look at the scene now. You might feel the urge to make sphere reflective. Study the code in \verb#examples/CubeMapping/include/CubeMapping.h#. Here is an approximate description of the steps you need to do to create dynamical cube mapping:
+\begin{exercise}{3*}{0.5}
+Another popular use of textures is cube mapping. For that you need 6 image files, which have common prefix \verb#mytexture_# and six suffixes, one for each side of the cube: \verb#bk#, \verb#dn#, \verb#fr#, \verb#lf#, \verb#rt#, \verb#up#. See images \verb#stevecube_*.jpg# in our \verb#data# folder. You can use those or find/create your own. Have a look at the tutorial\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+3}} and add SkyBox to our scene.
+\end{exercise}
+
+\begin{exercise}{4*}{0.5}
+Look at the scene now. You might feel the urge to make the sphere reflective. Study the code in \verb#examples/CubeMapping/include/# \verb#CubeMapping.h#. Here is an approximate description of the steps you need to do to implement dynamical cube mapping:
 \begin{enumerate}
 	\item Make our \verb#Application# class inherit \verb#Ogre::RenderTargetListener#
 	\item Make use of \verb#preRenderTargetUpdate()# method
@@ -130,7 +140,7 @@ Look at the scene now. You might feel the urge to make sphere reflective. Study 
 \end{enumerate}
 Note how we use additional camera to update textures used for the cube. Since textures are updated on each frame you will get actual dynamic reflections.
 \end{exercise}
-After completing exercises 3, 4 and 5 your scene will be something like this. 
+After completing exercises 2, 3 and 4 your scene will be something like this. 
 \begin{center}
 \includegraphics[width=0.7\textwidth]{textures.png}
 \end{center}
@@ -141,88 +151,76 @@ After completing exercises 3, 4 and 5 your scene will be something like this.
 
 Now let us move to the next project and see how OGRE works with meshes. Open project \verb#3_OgreMesh#. Meshes are handled as any other object we have seen before: they are entities, they have \verb#SceneNode# and you can specify materials, textures and shadows in the exactly same way as we have seen before. Have a look at \verb#createOgreScene()# routine to see how mesh is loaded and entity is created.
 
-\begin{exercise}{5}{0.5}
-Run the application to see an ogre standing in the middle of nowhere.
+\begin{exercise}{5}{1}
+In the \verb#data/Character# directory (which we use as resource location for this project) among other things we have \verb#Sinbad.skeleton# file. It describes armatures and 13 animations\footnote{\url{http://www.ogre3d.org/docs/manual/manual_75.html}} for this character: \verb#IdleBase#, \verb#IdleTop#, \verb#RunBase#, \verb#RunTop#, \verb#HandsClosed#, \verb#HandsRelaxed#, \verb#DrawSwords#, \verb#SliceVertical#, \verb#SliceHorizontal#, \verb#Dance#, \verb#JumpStart#, \verb#JumpLoop#, \verb#JumpEnd#. In this exercise we will implement \verb#RunBase#:
 \begin{enumerate}
-	\item[1.]Create a plane (\verb#Ogre::SceneManager::PT_PLANE#) and add any texture to it using new \verb#.material# script.
-	\item[2.]Currently your texture is stretched along whole plane, use \verb#texture_unit# attributes\footnote{\url{http://www.ogre3d.org/docs/manual/manual_17.html}} to cover the surface with repeating images of the texture
+	\item Create a pointer which will be used to handle the animation
+		\begin{verbatim}
+		AnimationState* mRunningAnimation;
+		\end{verbatim}
+	\item In the \verb#createOgreScene()# routine request pointer to the animation sequence named \verb#"RunBase"#
+		\begin{verbatim}
+		mRunningAnimation = mBodyEnt->getAnimationState("RunBase");
+		\end{verbatim} 
+	\item Control phase of the animation with \verb#addTime()# method of \verb#AnimationState#. Use it in the \verb#animateObjects()# routine.
+	\item Use \verb#setEnable()# method to enable and disable the animation in \verb#keyPressed()# and \verb#keyReleased()# routines.
 \end{enumerate}
-In practice session \#9, which was about different types of shadows, we implemented three different shadow techniques. You might remember that for implementing stencil shadows you first needed to create shadow volume objects and after that implement the logic by carefully playing with stencil, color and depth buffers. OGRE allows you to enable stencil shadows with literally one line of code\footnote{See more \url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+2}}:
-\begin{verbatim}
-scene->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
-\end{verbatim}
-\begin{enumerate}
-	\item[3.] Enable shadows for our scene
-\end{enumerate}
-Note that you can control whether specific object casts a shadow using \verb#setCastShadows()# method of \verb#Ogre::Entity# object.
+In total this animation can be configured with 4-5 lines of code (not counting few \verb#if# statements, which you will probably need).
 \end{exercise}
 
-\begin{exercise}{6}{1}
+\begin{exercise}{6*}{0.5}
 Next let us make our character move when we press \verb#WASD# keys. Do the following:
 \begin{enumerate}
-\item Add new \verb#Vector3# which will be used to store requested direction
-\item Update this vector in \verb#keyPressed# and \verb#keyReleased# functions according to the user input
-\item Update character position in \verb#updateBody#
+\item Add new \verb#Vector3# which will be used to store requested direction.
+\item Update this vector in the \verb#keyPressed# and \verb#keyReleased# functions according to the user input.
+\item Update character position in \verb#updateBody#.
 \end{enumerate}
 We also would like our character to turn his face to the same direction where he is moving. One way to that is:
 \begin{enumerate}
 \item Use \verb#getOrientation().zAxis().angleBetween()# of object's \verb#SceneNode# to calculate angle between current object orientation and requested direction.
 \item Rotate the object using that angle.
 \end{enumerate}
-\end{exercise}
-
-\begin{exercise}{7}{1}
-In the \verb#data/Character# directory among other things we have \verb#Sinbad.skeleton# file. It describes armatures and 13 animations\footnote{\url{http://www.ogre3d.org/docs/manual/manual_75.html}} for this character: \verb#IdleBase#, \verb#IdleTop#, \verb#RunBase#, \verb#RunTop#, \verb#HandsClosed#, \verb#HandsRelaxed#, \verb#DrawSwords#, \verb#SliceVertical#, \verb#SliceHorizontal#, \verb#Dance#, \verb#JumpStart#, \verb#JumpLoop#, \verb#JumpEnd#. In this exercise we will implement \verb#RunBase#:
-\begin{enumerate}
-	\item Create a pointer which will be used to handle animation
-		\begin{verbatim}
-		AnimationState* mRunningAnimation;
-		\end{verbatim}
-	\item In the \verb#createOgreScene()# routine get pointer to the animation named \verb#"RunBase"#
-		\begin{verbatim}
-		mRunningAnimation = mBodyEnt->getAnimationState("RunBase");
-		\end{verbatim} 
-	\item You can control phase of the animation with \verb#addTime()# method of \verb#AnimationState#. Use it in \verb#animateObjects()# routine.
-	\item Use \verb#setEnable()# method to enable and diable animation in \verb#keyPressed()# and \verb#keyReleased()# routines.
-\end{enumerate}
-In total this animation can be enabled with 5 lines of code (not counting few \verb#if# statements, which you will probably need). Congratulations! You now have running ogre at your disposal.
+Congratulations! You now have running ogre at your disposal.
 \end{exercise}
 
 \begin{center}
 \includegraphics[width=0.7\textwidth]{meshanim.png}
 \end{center}
 
-The code you see in this project is simplified and adopted version of the OGRE sample application. You can find full version with all 13 animations, smooth transition between animations and floating camera in OGRE SKD under \verb#Samples/CharacterAnimation/include/SinbadCharacterController.h#.
-\begin{exercise}{8*}{1}
-Study the code there and implement in our application idle animation, jump, smooth transitions and using the swords. Add camera behaviour if you like. This exercise relies heavily on your coding skills, if you and C++ are friends then this exercise should be mostly copy-pasting to correct places.
-\end{exercise}
-
-\ \\
+The code you see in this project is simplified and adopted version of the OGRE sample application. You can find full version with all 13 animations, smooth transitions between animations and floating camera in OGRE SDK under \verb#Samples/CharacterAnimation/include/SinbadCharacterController.h#.
 \ \\
 
-Complex meshes like the one we have been using, their skeletons and animations can be created with modeling tools like Blender and then exported to OGRE format using exporters\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Blender+Exporter}} provided by OGRE. Our Sinbad was created in Blender, so you can open \verb#data/Character/Sinbad.blend# and do with it whatever you want. To access list of animations open "Dope Sheet" in one of the panels, Choose "Action Editor" and then you will see a drop-down list with all available animations.
+Complex meshes like the one we use here, their skeletons and animations can be created with modeling tools like Blender and then exported to OGRE format using exporters\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Blender+Exporter}} provided by OGRE. Our Sinbad was created in Blender, so you can open \verb#data/Character/Sinbad.blend# and do with it whatever you want. To access list of animations open ``Dope Sheet" in one of the panels, Choose ``Action Editor" and then you will see a drop-down list with all available animations.
 
-\begin{exercise}{9*}{1}
-It should be possible to export the mesh (and its animation) we have created on previous practice session to OGRE format and use in your application. Submit an application with self-made animated mesh to get a bonus point.
-\end{exercise}
-
-\begin{exercise}{10*}{2}
-In OGRE official Basic Tutorial 3: ``Terrain, Sky, and Fog"\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+3}} you can learn how to create terrains, sky (as we already did in exercise 4) and fog. Like this:
+\begin{exercise}{7*}{2}
+This bonus exercise offers you a variety of interesting things you can do. Implement all of them, any of them or any combination of them. Depending on the amount of effort you can get 1-2 bonus points.
+\ \\
+\ \\
+\textbf{More animations}\\
+Study the code in ODRE SDK \verb#Samples/Character# and add more animations to our application: idle animation, jump, smooth transitions, sword movements, etc. Add camera behaviour if you like. This exercise relies heavily on your coding skills, if you and C++ are friends then this exercise should be mostly copy-pasting to correct places.
+\ \\
+\ \\
+\textbf{Blender}\\
+It should be possible to export the mesh (and its animation) we have created during the previous practice session to OGRE format and use in it your application. Add self-made animated mesh to the scene.
+\ \\
+\ \\
+\textbf{Terrain}\\
+In OGRE official Basic Tutorial 3: ``Terrain, Sky, and Fog"\footnote{\url{http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+3}} you can learn how to create terrains, sky (as we already did in exercise 3) and fog resulting in a scene like this:
 \begin{center}
 \includegraphics[width=0.7\textwidth]{terrain.jpg}
 \end{center}
-Take ogre character and place him into such world. Choose details to your own liking: terrain, sky, light, shadows, textures, reflections, army of ogres, another creatures\footnote{Look inside \texttt{media/models} folder of OGRE SDK for more meshes and characters} and mysterious reflective sphere in the middle of everything...
+Take ogre character and place him into such world. Choose details to your own liking: terrain, sky, light, shadows, textures, reflections, army of ogres, other creatures\footnote{Look inside \texttt{media/models} folder of OGRE SDK for more meshes and characters} and mysterious reflective torus knot in the middle of everything...
 \end{exercise}
 
 
-\section{Plugins}
-In OGRE you can get additional functionality by using plugins. Open project \verb#4_OgrePlugins#. Have a look at the following line in the beginning of \verb#run# function:
+\section{Particle system plugin}
+In OGRE you can get additional functionality by using plugins. Open project \verb#4_OgreParticles#. Have a look at the following line in the beginning of \verb#run# function:
 \begin{verbatim}
 mRoot = new Ogre::Root("plugins.cfg");
 \end{verbatim}
-It tells OGRE name of the file in \verb#bin# directory where plugin configuration resides. Inside that file you will see how we enable plugin called ParticleFX. This plugin has a configuration file, which resembles \verb#.material# files we have seen before. Open \verb#data/Examples.particle# and study it.
+It tells OGRE the name of the file in \verb#bin# directory where plugin configuration is stored. Inside that file you will see how we enable plugin called ParticleFX. This plugin has a configuration file, which resembles \verb#.material# files we have seen before. Open \verb#data/Examples.particle# and study it.
 
-\begin{exercise}{11}{1}
+\begin{exercise}{8*}{0.5}
 To complete this exercise do the following:
 \begin{enumerate}
 	\item Make particle source follow mouse movements. For that you will need to add mouse listener in the way analogous to the way how keyboard listener is added. See helpful comments in the code.

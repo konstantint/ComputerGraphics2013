@@ -89,6 +89,9 @@ public:
         posLight->setSpecularColour(0.7, 0.7, 0.7);
         posLight->setPosition(3, 4, 10);
 
+        // Uncomment this line to enable shadows
+        //scene->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+
         // Next we need to create a material.
         // A common method is to provide it as a "material script" in the resources directory and
         // then simply refer by name
@@ -123,6 +126,7 @@ public:
         sphereNode->setScale(Ogre::Vector3(0.02, 0.02, 0.02));
 
         // Exercise 2: Change material name to the one you described in .material file
+        // ...
         sphere->setMaterialName("SphereMaterialCode");
 
         // Plane
@@ -132,10 +136,10 @@ public:
         planeNode->rotate(Ogre::Vector3(-1, 0, 0), Ogre::Degree(90));
         planeNode->translate(0, -10, 0);
 
-        // Exercise 3: Add your favourite picture as texture for the plane
+        // Exercise 2: Add your favourite picture as texture for the plane
         // ...
 
-        // Exercise 3: Enable SkyDome or SkyBox
+        // Exercise 3*: Enable SkyBox
         // ...
 
         return scene;

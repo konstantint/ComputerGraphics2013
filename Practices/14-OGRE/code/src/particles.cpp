@@ -2,7 +2,7 @@
  * MTAT.03.015 Computer Graphics.
  * Practice session 14: OGRE
  *
- * Plugins
+ * Particle FX plugin
  */
 #include <iostream>
 #include <OgreCommon.h>
@@ -15,7 +15,7 @@
 
 #include "input_util.h"
 
-// Exercise 8: make Application class inherit OIS::MouseListener class
+// Exercise 8*: make Application class inherit OIS::MouseListener class
 // ...
 class Application: public Ogre::FrameListener, public OIS::KeyListener {
 public:
@@ -39,7 +39,7 @@ public:
         mWindow = mRoot->initialise(true, "Basic OGRE example");
         mRoot->addFrameListener(this);
 
-        // Exercise 8: Read class description in input_util.h and update this line
+        // Exercise 8*: Read class description in input_util.h and update this line
         // ...
         mEventListener = new SimpleMouseAndKeyboardListener(mWindow, mRoot, this);
 
@@ -70,7 +70,7 @@ public:
         return true;
     }
 
-    // Exercise 8: add mouse listener here
+    // Exercise 8*: add mouse listener here
     // ...
 
     // ------------------------- Now the sample scene descriptions ------------------------- //
@@ -96,7 +96,7 @@ public:
     // FrameListener callback (~ idleFunc). Perform animation here
     bool frameRenderingQueued(const Ogre::FrameEvent& evt) {
 
-        // Exercise 8: update particle source potision here
+        // Exercise 8*: update particle source potision here
         // ...
 
         return true;

@@ -27,10 +27,10 @@ public:
 	Entity* mBodyEnt;
 	SceneNode* mBodyNode;
 
-	// Exercise 7: Add variable to store pointer to AnimationState
+	// Exercise 5: Add variable to store pointer to AnimationState
 	// ...
 
-	// Exercise 6: Add direction vector
+	// Exercise 6*: Add direction vector
 	// ...
 
 	Real mTimer;
@@ -63,27 +63,27 @@ public:
     // ------------------------- Keyboard listener ------------------------- //
     bool keyPressed(const OIS::KeyEvent &arg) {
 
+        // Start running
+        // Exercise 5: Enable running animation
+        // ...
+
 		// Change direction
-		// Exercise 6: Move character using WASD buttons
+		// Exercise 6*: Move character using WASD buttons
 		// For example the following checks if "W" button is pressed
 		// if (arg.key == OIS::KC_W) do domething
 		// ...
-
-        // Start running
-        // Exercise 7: Enable running animation
-        // ...
 
 		return true;
     }
     bool keyReleased(const OIS::KeyEvent &arg) {
 
-        // Cancel direction
-        // Exercise 6: Make character stop when key is released
-        // ...
-
         // Stop running
-        // Exercise 7: Disable running animation
+        // Exercise 5: Disable running animation
         // ..
+
+        // Cancel direction
+        // Exercise 6*: Make character stop when key is released
+        // ...
 
 		return true;
     }
@@ -108,22 +108,25 @@ public:
         light->setSpecularColour(1, 1, 1);
         light->setPosition(20.0f, 80.0f, 50.0f);
 
+        // Enable shadow computations
+        scene->setShadowTechnique(SHADOWTYPE_STENCIL_ADDITIVE);
+
+        // Scenery
+        Ogre::Entity* plane = scene->createEntity("Plane", Ogre::SceneManager::PT_PLANE);
+        Ogre::SceneNode* planeNode = scene->getRootSceneNode()->createChildSceneNode("PlaneNode");
+        planeNode->attachObject(plane);
+        planeNode->rotate(Ogre::Vector3(-1, 0, 0), Ogre::Degree(90));
+        plane->setCastShadows(false);
+        plane->setMaterialName("Floor/Marble");
+
         // Load character mesh
 		mBodyNode = scene->getRootSceneNode()->createChildSceneNode(Vector3::UNIT_Y * 5);
 		mBodyEnt = scene->createEntity("SinbadBody", "Sinbad.mesh");
 		mBodyNode->attachObject(mBodyEnt);
 
         // Load animations
-        // Exercise 7: Get pointer to animation state
+        // Exercise 5: Get pointer to animation state
         // ...
-
-        // Enable shadow computations
-        // Exercise 5: Enable shadows
-        // ..
-
-        // Scenery
-        // Exercise 5: Add the floor with repeating texture
-        // ..
 
         return scene;
     }
@@ -138,12 +141,12 @@ public:
     // Update animation and body position with time
     void animateObjects(Real deltaTime) {
 
-		// Exercise 6: update character position and
+        // Exercise 5: Change animation step using addTime() method of AnimationState object
+        // ..
+
+		// Exercise 6*: update character position and
         // turn him accoring to the current direction
         // ...
-
-        // Exercise 7: Change animation step using addTime() method of AnimationState object
-        // ..
 
 	}
 
