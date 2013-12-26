@@ -34,9 +34,11 @@
 \newcommand{\bM}{\mathbf{M}}
 \newcommand{\bK}{\mathbf{K}}
 \newcommand{\bD}{\mathbf{D}}
+\newcommand{\bG}{\mathbf{G}}
 \newcommand{\bA}{\mathbf{A}}
 \newcommand{\bX}{\mathbf{X}}
 \newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bP}{\mathbf{P}}
 \newcommand{\bR}{\mathbf{R}}
 \newcommand{\bI}{\mathbf{I}}
 \newcommand{\bS}{\mathbf{S}}
@@ -44,12 +46,14 @@
 \newcommand{\balpha}{\boldsymbol{\alpha}}
 \newcommand{\pt}[2]{\left(\begin{array}{c}#1\\#2\end{array}\right)}
 
+\newcommand{\Bezier}{B\'{e}zier}
 
+\newcommand{\vectwo}[2]{\left(\begin{matrix} #1 \\ #2 \end{matrix}\right)}
 
 \begin{document}
 \title{MTAT.03.015 Computer Graphics (Fall 2013)\\
 \medskip
-\Large Sample solutions to math exercises (Lectures II-V)}
+\Large Sample solutions to math exercises}
 \author{Konstantin Tretyakov}
 \date{}
 \maketitle
@@ -403,6 +407,236 @@ Intuitively, the following diagram explains the idea: depict $z$ on the horizont
 \end{center}
 
 A more formal proof is given in Lengyel's book, Chapter 4.4.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\item Bring examples of a two-piece linear spline curve, which happens to be:
+\begin{enumerate}
+\item $C^1$-smooth at the connection point.
+\item $G^1$-smooth, but not $C^1$-smooth at the connection point.
+\end{enumerate}
+
+\paragraph{Solution.}
+\begin{enumerate}
+\item[(a)] Let the first piece be a segment between $(0, 0)$ and $(1, 0)$:
+$$
+\bp(t) = (1-t)\vectwo{0}{0} + t\vectwo{1}{0} = \vectwo{t}{0}
+$$
+and the second piece -- a segment between $(1, 0)$ and $(2, 0)$:
+$$
+\bq(t) = (1-t)\vectwo{1}{0} + t\vectwo{2}{0} = \vectwo{t+1}{0}
+$$
+The gradient of the first piece at the endpoint $\bp(1)$ is $(1,0)^T$, and is thus exactly equal to the gradient of the second piece at $\bq(0)$, hence the combined curve is $C^1$ (in fact, $C^\infty$)-smooth.
+
+\item[(b)] Like in the previous case, let the first piece be a segment between $(0, 0)$ and $(1, 0)$:
+$$
+\bp(t) = (1-t)\vectwo{0}{0} + t\vectwo{1}{0} = \vectwo{t}{0}.
+$$
+Let the second piece be a segment, continuing from $(1,0)$ in the same direction, but faster, having $(3, 0)$ as the endpoint:
+$$
+\bq(t) = (1-t)\vectwo{1}{0} + t\vectwo{3}{0} = \vectwo{2t+1}{0}
+$$
+The gradient at $\bq(0)$ is $\bq'(0) = (2,0)^T = 2\cdot\bp'(1)$, i.e. the direction is the same, but the magnitude is different.
+\end{enumerate}
+
+\item Construct the basis matrices for:
+\begin{enumerate}
+\item the linear \Bezier' curve,
+\item the quadratic \Bezier' curve.
+\end{enumerate}
+
+\paragraph{Solution.}
+\begin{enumerate}
+\item[(a)] By definition, the basis functions for a linear \Bezier' curve are
+\begin{align*}
+B^{(1)}_0(t) &= t^0(1-t)^{1-0} = (1-t), \\
+B^{(1)}_1(t) &= t^1(1-t)^{1-1} = t,
+\end{align*}
+hence the basis matrix is
+$$
+\left(\begin{matrix} 1 & -1 \\ 0 & 1 \end{matrix}\right)
+$$
+\item[(b)] Analogously, the basis functions for a quadratic curve are
+\begin{align*}
+B^{(2)}_0(t) &= t^0(1-t)^{2-0}  = 1 -2t + t^2, \\
+B^{(2)}_1(t) &= 2t^1(1-t)^{2-1} = 2t - 2t^2, \\
+B^{(2)}_2(t) &= t^2(1-t)^{2-2} = t^2,
+\end{align*}
+hence the basis matrix is
+$$
+\left(\begin{matrix} 1 & -2 & 1\\ 0 & 2 & -2 \\ 0 & 0 & 1 \end{matrix}\right)
+$$
+\end{enumerate}
+
+\item Construct the basis matrices for:
+\begin{enumerate}
+\item the linear Lagrange' curve,
+\item the quadratic Lagrange' curve (assume the parameter vector for the control points to be $t=(0, 0.5, 1)$).
+\end{enumerate}
+
+\paragraph{Solution.}
+\begin{enumerate}
+\item[(a)] Following the construction of the Lagrange' basis matrix presented on the lecture, let
+$$
+\bA = \left(\begin{matrix} 0^0 & 1^0 \\ 0^1 & 1^1 \end{matrix}\right) = \left(\begin{matrix} 1 & 1 \\ 0 & 1 \end{matrix}\right)
+$$
+then the basis matrix is
+$$
+\bM_L = \bA^{-1} = \left(\begin{matrix} 1 & -1 \\ 0 & 1 \end{matrix}\right)
+$$
+
+\item[(b)] Analogously, let
+$$
+\bA = \left(\begin{matrix} 0^0 & 0.5^0 & 1^0 \\ 0^1 & 0.5^1 & 1^1 \\ 0^2 & 0.5^2 & 1^2 \end{matrix}\right) = \left(\begin{matrix} 1 & 1 & 1 \\ 0 & 0.5 & 1 \\ 0 & 0.25 & 1 \end{matrix}\right)
+$$
+hence the basis matrix is
+$$
+\bM_L = \bA^{-1} = \left(\begin{matrix} 1 & -3 & 2\\ 0 & 4 & -4 \\ 0 & -1 & 2 \end{matrix}\right)
+$$
+\end{enumerate}
+
+\item Construct a one-dimensional quadratic Lagrange' curve defined by control points $(0, 1, 0)$. Provide the answer as a polynomial in $t$.
+
+\paragraph{Solution.}
+We seek for a parabola, that starts at $0$ for $t=0$, rises to $1$ at $t=0.5$ and then falls down to $0$ by time point $t=1$. Intuitively, it is easy to note that the polynomial must have $t=0$ and $t=1$ as its roots, hence it is of the form $\alpha t(t-1)$, where $\alpha$ can be found from the condition $\bp(0.5)=1$.
+Alternatively, you might recognize the ``jumping'' motion path familiar to you from several practice sessions.
+
+A more methodical way would be to follow the standard $\bP\bM\bT_2(t)$ formula together with the basis matrix derived in the previous exercise:
+$$
+\bp(t) = \left(\begin{matrix} 0 & 1 & 0 \end{matrix}\right)\left(\begin{matrix} 1 & -3 & 2\\ 0 & 4 & -4 \\ 0 & -1 & 2 \end{matrix}\right)\left(\begin{matrix} 1 \\ t \\ t^2 \end{matrix}\right) = 4t - 4t^2.
+$$
+
+\item Consider the curve in the previous exercise. Convert it to the \Bezier' representation. That is, find the \Bezier' control points for exactly the same curve.
+
+\paragraph{Solution.}
+Intuitively, it is possible to note that
+$$
+4t - 4t^2 = 2\cdot(2(1-t)t) = 0\cdot B^{(2)}_0(t) + 2\cdot B^{(2)}_1(t) + 0 \cdot B^{(2)}_2(t),
+$$
+hence the \Bezier' control points for the same polynomial must be $(0, 2, 0)$.
+
+A more methodical approach is to follow the conversion method suggested on the lecture,
+$$
+\bP_B = \bP_L\bM_L\bM_B^{-1} = \left(\begin{matrix} 0 & 2 & 0 \end{matrix}\right)
+$$
+
+\item Prove that degree $n$ Bernstein polynomials $B_i^{(n)}, i\in\{0, \dots, n\}$ sum to one, i.e.:
+$$
+\sum_{i=0}^n B_i^{(n)}(t) = 1,\text{   for all   }n\in\mathbb{N}, t\in[0,1].
+$$
+Hint: one way to show it is to note that the Bernstein polynomials are somehow related to a well-known probability distribution.
+
+\paragraph{Solution.}
+If you are familiar with probability theory, you could note that $B^{(n)}_i(t) = \Pr[x=i]$ where $x$ is a random variable with a binomial distribution $\text{Bin}(n, t)$. Consequently,
+$$
+\sum_{i=0}^n B^{(n)}_i(t) = \sum_{i=0}^n \Pr[x=i] = \Pr[x\in\{0,\dots,n\}] = 1.
+$$
+
+More formally, we could use the binomial theorem:
+$$
+1 = 1^n = (t + (1-t))^n = \sum_{i=0}^n \vectwo{n}{i} t^i(1-t)^{n-i} = \sum_{i=0}^n B_i^{(n)}(t).
+$$
+
+\item A Hermite' curve is a reparameterization of the cubic \Bezier' curve, that is specified by its start and end points $\bp_0$, $\bp_3$ and its direction vectors (i.e. gradients) $\bs_0$, $\bs_3$ at those points. In other words, the geometry matrix for the Hermite' curve is $\bG=(\bp_0, \bp_3, \bs_0, \bs_3)$. Derive the basis matrix $\bM_H$ of the Hermite curve.
+
+\paragraph{Solution.}
+Recall that
+\begin{align*}
+\bs_0 &= 3(\bp_1-\bp_0)\\
+\bs_3 &= 3(\bp_3-\bp_2)
+\end{align*}
+Consequently, the relationship between the Bezier' and the Hermite geometry matrices is:
+\begin{align*}
+\bP_H &= \left(\begin{matrix} \bp_0 & \bp_3 & \bs_0 & \bs_3\end{matrix}\right)
+ = \left(\begin{matrix} \bp_0 & \bp_3 & (3\bp_1 - 3\bp_0) & (3\bp_3 - 3\bp_2)\end{matrix}\right) \\
+&= \left(\begin{matrix} \bp_0 & \bp_1 & \bp_2 & \bp_3\end{matrix}\right) \left(\begin{matrix} 
+1 & 0 & -3 & 0 \\ 
+0 & 0 &  3 & 0 \\ 
+0 & 0 &  0 & -3 \\
+0 & 1 &  0 & 3
+\end{matrix}\right) \\
+&= \bP_B\bM
+\end{align*}
+
+Now, given a Bezier curve $\bp(t) = \bP_B\bM_B\bT_3(t)$, the equivalent Hermite representation would be
+$$
+\bp(t) = \bP_B\bM_B\bT_3(t) = (\bP_H\bM^{-1})\bM_B\bT_3(t)  = \bP_H(\bM^{-1}\bM_B)\bT_3(t),
+$$
+where the basis matrix is
+$$
+\bM^{-1}\bM_B = \left(\begin{matrix} 
+1 & 0 & -3 & 2 \\ 
+0 & 0 &  3 & -2 \\ 
+0 & 1 &  -2 & 1 \\
+0 & 0 &  -1 & 1
+\end{matrix}\right)
+$$
+
+\item Prove that a cubic B-spline will pass a control point, if it is repeated three times.
+
+\paragraph{Solution.}
+Consider a segment of a cubic B-spline corresponding to four control points $\bp_0, \bp_0, \bp_0, \bp_3$ (i.e. the first point is repeated three times).
+The corresponding curve segment (when represented via blending functions) is:
+$$
+\bp(t) = \bp_0 (b_0(t) + b_1(t) + b_2(t)) + \bp_3 b_3(t),
+$$
+However, $b_3(0) = \frac{0^3}{6} = 0$, hence $(b_0(0) + b_1(0) + b_2(0))$ must be $1$, and thus
+$$
+\bp(0) = \bp_0\cdot 1 + \bp_3\cdot 0 = \bp_0,
+$$
+i.e. the segment passes through $\bp_0$ at $t=0$.
+
+Analogously, if the control points are $\bp_0, \bp_3, \bp_3, \bp_3$, then the curve is
+$$
+\bp(t) = \bp_0 b_0(t) + \bp_3(b_1(t) + b_2(t) + b_3(t)),
+$$
+and as $b_0(1) = \frac{(1-1)^3}{6} = 0$,
+$$
+\bp(1) = \bp_3,
+$$
+i.e. the curve passes through $\bp_3$ at $t=1$.
+
+\item We derived the cubic B-spline to be a curve that is $C^2$-smooth at all points, no matter what the control points are. However, we also somewhy said that repeating control points ``reduces smoothness'' and even saw an example where repeating the control point three times results in a curve with a sharp corner. This seems like a contradiction. Explain this.
+
+\paragraph{Solution.}
+When a control point is repeated three times the curve will pass through it, which often results in visually sharp corners. Surprisingly, however, the curve function will still stay $C^2$-smooth. This happens because, in terms of movement, the curve ``comes to a halt'' at the repeated control point (its first and second derivatives become zero for a moment), and then gradually builds up speed in a different direction.
+
+To see it better, consider a one-dimensional B-spline with control points $0.5, 3, 3, 3, 1$ as a function of $t$:
+\begin{center}
+\includegraphics[width=0.7\textwidth]{bspline1d.png}
+\end{center}
+
+Note how the curve moves in a positive direction, reaches the point $3$ at $t=2$, halts there for a moment and starts moving backwards away from $3$. If you visualize this movement as a one-dimensional curve viewed ``from above'', you might mistake this for a $C^2$-discontinuity.
+
+Note that this makes the effect of repeating control points different from the effect of repeating knots in a non-uniform B-spline. In the latter case the basis functions really loose smoothness. See image below.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{nurbs.png}
+\begin{minipage}{0.9\textwidth}
+The basis functions of a four-control-point 3$^\text{rd}$ degree NURBS curve with knot vector $(0,1,2,2,2,3,4,5)$. Note how the second basis function is not $C^1$-smooth at $t=2$, and hence the whole curve will not be.
+\end{minipage}
+\end{figure}
+
+\item Prove that a (uniform) B-spline of degree $k$ with $n$ control points has $n+k+1$ knots. 
+
+Hint: count the number of curve segments and add the ``virtual'' segments on both sides, where the basis functions for the first and last control points are still nonzero.
+
+\paragraph{Solution.}
+A single segment of a degree $k$ B-spline, being a polynomial curve, is determined by $k+1$ control points. Consequently, one control point affects $k+1$ different segments of the spline, i.e. it is weighed by a basis function that must span $k+2$ knots (the parameter values, corresponding to endpoints and connection points of $k+1$ segments). This proves that for $n=1$ the total number of knots is indeed $n+k+1$.
+
+Now add a new control point. This introduces a new basis function. The domain of the added basis function includes $k$ previous segments and 1 new (see illustration below). Consequently, one extra knot needs to be added for each new control point. For $2$ points there will thus be $2+k+1$ knots, for $3$ points $3+k+1$ knots, and the claim holds by induction.
+
+Alternatively, note that the parameter region where the basis function of the control point $\bp_i$ is nonzero is $[i, i+k+2]$. Consequently, the parameter space where at least one basis function is nonzero starts at $0$ (the leftmost end of the basis function for $\bp_0$) and ends at $(n-1)+k+2$ (the rightmost end of the basis function for $\bp_{n-1}$).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{knotcount.png}
+\begin{minipage}{0.9\textwidth}
+Two consecutive basis functions of a 4th degree B-spline. Each spans $5$ segments and thus requires $6$ knots. The two functions share a region of $4$ common segments. The total number of knots is $7=4+2+1$.
+\end{minipage}
+\end{figure}
 \end{enumerate}
 \end{document}
 
