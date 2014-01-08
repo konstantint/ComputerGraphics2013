@@ -352,7 +352,7 @@ $$
 \includegraphics[width=0.5\textwidth]{projection1.png}
 \end{center}
 
-When viewed as a transformation $\bbR^3\to\bbR^3$, this matrix acts as a projection onto the $(\bx, \by+\bz)$ plane. That is, it takes points from the $y=1$ plane and ``raises'' them up to $y=w$ plane. See illustration below. Think how perspective division after this transformation will lead all points back to the $w=1$ plane and, coincidentally, also the $y=1$ line.
+When viewed as a transformation $\bbR^3\to\bbR^3$, this matrix takes points from the $y=1$ plane and ``raises'' them up to $y=w$ plane. See illustration below. Think how perspective division after this transformation will lead all points back to the $w=1$ plane and, coincidentally, also the $y=1$ line.
 \begin{center}
 \includegraphics[width=0.5\textwidth]{projection2.png}
 \end{center}
@@ -362,7 +362,7 @@ When viewed as a transformation $\bbR^3\to\bbR^3$, this matrix acts as a project
 Let
 \begin{align*}
 \bw &:= (a,b,c,d),\\
-k &:= (a^2 + b^2 + c^2)^{-1}\\
+k &:= (a^2 + b^2 + c^2)^{-1/2}\\
 \bp &:= (p_x, p_y, p_z, 1),
 \end{align*}
 Now due to the properties of implicit plane equation, for any point $\bx = (x, y, z, 1)$ the signed distance from this point to the plane is equal to $k\bw^T\bx$. In particular, the distance from $P$ to the plane is $k\bw^T\bp$.
